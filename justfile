@@ -1,7 +1,6 @@
 export GO_VERSION := "1.22.3"
 offergen_tester_image := "offergen-tester-image"
 export OFFERGEN_TESTER_IMAGE := offergen_tester_image
-offergen_prod_image := "offergen-prod-image"
 
 src_mount := "-v " + justfile_directory() / "offergen" + ":/source"
 docker_run := "docker run --rm"
@@ -49,11 +48,3 @@ down:
 
 build-prod: generate
     {{docker_run}} {{src_mount}} --entrypoint /bin/bash {{offergen_tester_image}} -c 'export GOOS=linux && export GOARCH=amd64 && go build -o build/'
-
-shell-prod: build-prod
-    {{docker_run}} -p 8080:80 -it {{src_mount}} --entrypoint /bin/bash {{offergen_prod_image}}
-
-run-prod: build-prod
-    {{docker_run}} -it {{src_mount}} \
-        -p 8080:80 \
-        {{offergen_prod_image}}
