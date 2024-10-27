@@ -1,0 +1,12 @@
+package pages
+
+import (
+	"offergen/endpoint/models"
+	"offergen/templates/components"
+)
+
+templ (pr *PageTemplater) Inventory(items []models.Item) {
+	<link rel="stylesheet" href={ "styles/inventory.css?cache-id=" + pr.cacheID }/>
+	@components.Sidebar(true)
+	@pr.inventoryTemplater.ItemsPage()
+}

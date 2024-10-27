@@ -1,0 +1,172 @@
+#editorContainer .item-creator {
+    display: grid;
+    grid-template-columns: 6fr 3fr 1fr;
+    grid-gap: 0.5rem;
+}
+
+#editorContainer .error-msg {
+    grid-row-start: 2;
+    min-height: 1.5rem;
+}
+
+#itemsContainer .item {
+    display: grid;
+    color: white;
+    grid-template-columns: 6.5fr 3fr 0.5fr;
+    grid-gap: 0.5rem;
+    margin-top: 1rem;
+    padding: 0rem;
+    padding: 0rem;
+}
+
+#itemsContainer .item div {
+    padding: 0.5rem;
+}
+
+#itemsContainer .item.htmx-swapping {
+    opacity: 0;
+    transition: opacity 0.25s ease-out;
+}
+
+#itemsContainer .item .item-price {
+    text-align: right;
+}
+
+#itemsContainer .item .delete-button .delete-icon {
+    width: 1.5em;
+    fill: var(--colors-grey-9);
+    height: 1.6em;
+    vertical-align: -1em;
+}
+
+#itemsContainer .item .delete-button {
+    border: none;
+    background-color: var(--colors-grey-4);
+    width: 2rem;
+    height: 2rem;
+    margin-left: 0.4rem;
+    margin-right: 0.4rem;
+    padding: 0;
+    border-radius: var(--border-radius);
+    font-size: 0.9rem;
+}
+
+#itemsContainer .item .delete-button:hover>svg {
+    fill: var(--colors-grey-8);
+}
+
+
+#paginator-container {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 28rem minmax(0, 1fr);
+}
+
+#paginator {
+    display: grid;
+    grid-column-start: 2;
+    grid-template-columns: repeat(9, 1fr);
+    padding: 1rem;
+}
+
+#paginator a {
+    width: 1.5rem;
+    display: inline-block;
+}
+
+#paginator a.current {
+    border-color: var(--colors-grey-6);
+}
+
+.card.no-background.add-new-container {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    padding: 1rem;
+    margin: 0;
+}
+
+.add-new-container a {
+    grid-column-start: -2;
+}
+
+.add-item-note {
+    color: white;
+    margin-top: 0.5rem;
+}
+
+.add-item-note div {
+    padding: 0.25rem;
+}
+
+.jump-backward,
+.jump-forward {
+    background-image: url('/media/elipsis.svg');
+    background-repeat: no-repeat;
+    background-size: 40%;
+    background-position: center;
+    width: 1em;
+    height: 1em;
+}
+
+.jump-backward:hover {
+    background-image: url('/media/chevrons-left.svg');
+}
+
+.jump-forward:hover {
+    background-image: url('/media/chevrons-right.svg');
+}
+
+.card-container .inventory-title {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    margin-top: 1.5rem;
+    margin-bottom: 1.5rem;
+    padding: 1rem;
+    border-bottom: 0.15rem solid var(--colors-grey-7);
+    border-radius: 0;
+}
+.card-container .inventory-title a {
+    grid-column-start: -2;
+}
+
+.card-container .inventory-title h2 {
+    grid-column-start: span 2;
+    margin: 0;
+}
+
+
+.title-icon {
+    width: 1.75rem;
+    height: 1.75rem;
+    fill: var(--colors-grey-9);
+}
+
+.title-icon:hover {
+    fill: var(--colors-grey-8);
+}
+
+#inventorySettingsContainer {
+    color: white;
+}
+
+
+.settings-form {
+    display: grid;
+    grid-template-columns: repeat(10, minmax(0, 1fr));
+    grid-row-gap: 0.5rem;
+}
+
+.settings-form label {
+    grid-column-start: 1;
+    grid-column-end: 3;
+}
+
+.settings-form input, .settings-form div {
+    grid-column-start: 3;
+    grid-column-end: 8;
+}
+
+.settings-form button {
+    grid-column-start: 5;
+    grid-column-end: 7;
+    margin-top: 1rem;
+}

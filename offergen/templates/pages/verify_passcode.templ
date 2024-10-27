@@ -1,0 +1,15 @@
+package pages
+
+import (
+	"offergen/templates/components/auth"
+	"offergen/templates/layouts"
+)
+
+templ VerifyPasscode(email string) {
+	@layouts.SmallCard("no-background") {
+		<h2 style="color: white">Enter Passcode</h2>
+	}
+	@layouts.SmallCard() {
+		@auth.VerifyPasscodeForm(email, "")
+	}
+}

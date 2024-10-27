@@ -1,0 +1,29 @@
+package auth
+
+import "offergen/templates/components/errors"
+
+templ AuthenticateInitForm(errorMsg string) {
+	<div id="authenticate-init-form">
+		<form
+			hx-post="/auth/init"
+			hx-swap="innerHTML"
+			hx-target="#auth-element"
+			class="email-form"
+		>
+			<input
+				id="email"
+				name="Email"
+				type="email"
+				placeholder="john.doe@example.com"
+				required
+				autofocus
+			/>
+			<button type="submit">Continue</button>
+			if errorMsg != "" {
+				@errors.ErrorMessage(errorMsg)
+			} else {
+				<div class="error-msg"></div>
+			}
+		</form>
+	</div>
+}

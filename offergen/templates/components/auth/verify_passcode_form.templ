@@ -1,0 +1,38 @@
+package auth
+
+import "offergen/templates/components/errors"
+
+templ VerifyPasscodeForm(email, errorMsg string) {
+	<div id="verify-passcode-form">
+		<p class="about">Enter passcode sent to { email }</p>
+		<form
+			hx-post="/auth/verify-passcode"
+			hx-swap="outerHTML"
+			hx-target="#verify-passcode-form"
+			class="passcode-form"
+		>
+			<input
+				name="Passcode"
+				type="text"
+				class="passcode-input"
+				placeholder="123456"
+				pattern="\d{6}"
+				maxlength="6"
+				minlength="6"
+				required
+				title="6 digits."
+			/>
+			<button
+				type="submit"
+				class="submit-button"
+			>
+				Submit
+			</button>
+			if errorMsg != "" {
+				@errors.ErrorMessage(errorMsg)
+			} else {
+				<div class="error-msg"></div>
+			}
+		</form>
+	</div>
+}

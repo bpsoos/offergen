@@ -1,0 +1,50 @@
+package components
+
+templ Sidebar(isLoggedIn bool) {
+	<div class="sidebar">
+		<a
+			hx-get="/"
+			hx-target="body"
+			id="home"
+			style="grid-column-start: 1"
+		>
+			Home
+		</a>
+		if !isLoggedIn {
+			<a
+				hx-get="/authenticate"
+				hx-target="body"
+				id="signup"
+				style="grid-column-start: -2;"
+			>
+				Sign in or sign up
+			</a>
+		} else {
+			<a
+				hx-get="/inventory"
+				hx-target="body"
+				id="inventory"
+				style="grid-column-start: 2;"
+			>
+				Inventory
+			</a>
+			<a
+				hx-get="/user"
+				hx-target="body"
+				id="profile"
+				style="grid-column-start: -3;"
+			>
+				Profile
+			</a>
+			<a
+				hx-get="/logout"
+				hx-target=".sidebar"
+				hx-swap="outerHTML"
+				id="logout"
+				style="grid-column-start: -2"
+			>
+				Log out
+			</a>
+		}
+	</div>
+}

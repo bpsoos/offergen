@@ -1,0 +1,108 @@
+package inventory
+
+import (
+	"fmt"
+	"strconv"
+)
+
+templ (it *InventoryTemplater) Paginator(current, last int) {
+	<div id="paginator">
+		if last <= 7 {
+			for i:= 1; i<=last; i++ {
+				@selectAnchor(i, current)
+			}
+		} else if current <= 5 {
+			for i:= 1; i<=7; i++ {
+				@selectAnchor(i, current)
+			}
+			@jumpForward(current, last)
+			@selectAnchor(last, current)
+		} else if last-current <= 4 {
+			@selectAnchor(1, current)
+			@jumpBackward(current, last)
+			for i:= last-6; i<=last; i++ {
+				@selectAnchor(i, current)
+			}
+		} else {
+			@selectAnchor(1, current)
+			@jumpBackward(current, last)
+			for i:= current-2; i<=current+2; i++ {
+				@selectAnchor(i, current)
+			}
+			@jumpForward(current, last)
+			@selectAnchor(last, current)
+		}
+	</div>
+}
+
+templ jumpBackward(current, last int) {
+	@anchor(getJumpBackwardPageNumber(current, last), "jump-backward")
+}
+
+templ jumpForward(current, last int) {
+	@anchor(getJumpForwardPageNumber(current, last), "jump-forward")
+}
+
+templ selectAnchor(page, current int) {
+	if page == current {
+		@currentAnchor(page)
+	} else {
+		@anchor(page) {
+			{ strconv.Itoa(page) }
+		}
+	}
+}
+
+templ anchor(page int, styles ...string) {
+	<a
+		id={ fmt.Sprintf("a-%v", page) }
+		hx-get={ fmt.Sprintf("/inventory/item-pages?current=%v", page) }
+		hx-target="#paginator"
+		hx-swap="outerHTML "
+		class={ styles }
+	>
+		{ children... }
+	</a>
+	<a
+		style="display: none;"
+		hx-get={ fmt.Sprintf("/inventory/items?from=%v&amount=%v", (page-1)*10, 10) }
+		hx-trigger={ fmt.Sprintf("click from:#a-%v", page) }
+		hx-swap="outerHTML"
+		hx-target="#itemsContainer"
+	></a>
+}
+
+templ currentAnchor(page int) {
+	<a
+		id={ fmt.Sprintf("a-%v", page) }
+		class="current"
+	>{ strconv.Itoa(page) }</a>
+	<a
+		style="display: none;"
+		hx-get={ fmt.Sprintf("/inventory/items?from=%v&amount=%v", (page-1)*10, 10) }
+		hx-trigger="item-deleted from:body"
+		hx-swap="outerHTML swap:0.7s"
+		hx-target="#itemsContainer"
+	></a>
+}
+
+func getJumpForwardPageNumber(current, last int) int {
+	if current < 4 {
+		current = 4
+	}
+	if current+4 < last {
+		return current + 4
+	}
+	return last
+}
+
+func getJumpBackwardPageNumber(current int, last int) int {
+	if current > last-4 {
+		current = last - 4
+	}
+	if current-4 > 1 {
+		return current - 4
+	}
+
+	return 1
+}

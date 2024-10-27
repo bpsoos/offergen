@@ -1,0 +1,8 @@
+#profileContainer {
+    text-align:center;
+    color: white;
+}
+
+#profileContainer div {
+    margin-bottom: 1rem;
+}

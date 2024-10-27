@@ -1,0 +1,43 @@
+account:
+  allow_deletion: true
+database:
+  user: testuser
+  password: testpassword
+  host: hanko-postgres
+  port: 5432
+  database: testdb
+  dialect: postgres
+email_delivery:
+  from_address: no-reply@example.com
+  from_name: Example Application
+  smtp:
+    host: smtp
+    port: 2500
+rate_limiter:
+  enabled: false
+service:
+  name: Example Authentication Service
+secrets:
+  keys:
+    - RdoG4xNXAdnN6zkGTFDnsTplfx2ixSPu
+session:
+  cookie:
+    secure: false
+    name: offergen__auth
+    http_only: true
+    same_site: lax
+  lifespan: 12h
+audit_log:
+  console_output:
+    enabled: true
+    output: "stdout"
+  storage:
+    enabled: false
+password:
+  enabled: false
+webhooks:
+  enabled: true
+  hooks:
+    - callback: "http://offergen/event/users/create"
+      events: 
+        - "user.create"

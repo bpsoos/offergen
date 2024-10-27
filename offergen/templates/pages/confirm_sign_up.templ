@@ -1,0 +1,15 @@
+package pages
+
+import (
+	"offergen/templates/components/auth"
+	"offergen/templates/layouts"
+)
+
+templ ConfirmSignUp(email string) {
+	@layouts.SmallCard("no-background") {
+		<h2 style="color: white">Confirm sign up</h2>
+	}
+	@layouts.SmallCard() {
+		@auth.ConfirmSignUpForm(email)
+	}
+}

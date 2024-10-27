@@ -1,0 +1,26 @@
+package pages
+
+import (
+	"offergen/templates/components"
+	"offergen/templates/layouts"
+)
+
+templ Profile(email string) {
+	<link rel="stylesheet" href="styles/profile.css"/>
+	@components.Sidebar(true)
+	@layouts.SmallCard("no-background") {
+		<h2 style="color: white">Profile</h2>
+	}
+	@layouts.SmallCard() {
+		<div id="profileContainer">
+			<div>Email: { email }</div>
+			<button
+				hx-delete="/user"
+				hx-confirm="Are you sure you want to delete your account? This is irreversible!"
+				hx-target="body"
+			>
+				Delete account
+			</button>
+		</div>
+	}
+}

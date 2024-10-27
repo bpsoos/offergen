@@ -1,0 +1,63 @@
+name: tests
+on:
+  workflow_dispatch:
+jobs:
+  test-ui-e2e:
+    timeout-minutes: 10
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+    - uses: extractions/setup-just@v2
+      with:
+        just-version: 1.35.0
+    - name: test
+      run: |
+        just generate
+        just e2e/test-ci
+    - name: dump logs
+      run: just e2e/logs-dump
+      if: ${{ always() }}
+  test-backend-unit:
+    timeout-minutes: 10
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+    - uses: extractions/setup-just@v2
+      with:
+        just-version: 1.35.0
+    - run: |
+        just generate
+        just test
+  lint-offergen:
+    permissions:
+      contents: read
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          cache-dependency-path: "offergen/go.sum"
+          go-version: stable
+      - uses: extractions/setup-just@v2
+        with:
+          just-version: 1.35.0
+      - run: just generate
+      - name: golangci-lint
+        uses: golangci/golangci-lint-action@v6
+        with:
+          version: v1.60
+          working-directory: offergen
+          args: --timeout=5m
+  lint-e2e:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - uses: extractions/setup-just@v2
+        with:
+          just-version: 1.35.0
+      - run: just e2e/lint
+
+

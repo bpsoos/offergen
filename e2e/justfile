@@ -1,0 +1,58 @@
+docker_compose := "docker compose --project-directory .. -f docker-compose.yaml"
+
+build-deps:
+    just ../build
+
+update-packages:
+    {{docker_compose}} run --entrypoint npm --rm -ti tester update
+
+up: build-deps
+    {{docker_compose}} up -d
+
+logs:
+    {{docker_compose}} logs -f
+
+logs-dump:
+    {{docker_compose}} logs
+
+down:
+    {{docker_compose}} down --remove-orphans --volumes --timeout 0
+
+shell: up
+    {{docker_compose}} run --entrypoint /bin/bash --rm -ti tester
+
+sql:
+    {{docker_compose}} exec offergen-postgres psql testdb -U testuser
+
+test: build-deps install-playwright-if-needed
+    {{docker_compose}} run -p 9323:9323 --entrypoint npx --rm -ti tester playwright test
+
+lint: build-deps install-playwright-if-needed
+    {{docker_compose}} run \
+        --no-deps \
+        --entrypoint npx \
+        --rm \
+        tester \
+            tsc --noEmit -p offergen-tests/tsconfig.json
+
+test-repeat: build-deps install-playwright-if-needed
+    {{docker_compose}} run -p 9323:9323 --entrypoint npx --rm -ti tester playwright test --repeat-each=5
+
+test-ci: build-deps install-playwright-if-needed
+    {{docker_compose}} run -p 9323:9323 -e CI=1 --entrypoint npx --rm tester playwright test --repeat-each=5
+
+install-playwright-if-needed:
+    echo "{{ \
+            if path_exists("suites/node_modules") == "false" { \
+                `just install-playwright` \
+            } else { \
+                "already installed" \
+            } \
+        }}"
+
+install-playwright:
+    {{docker_compose}} run \
+        --no-deps \
+        --entrypoint /bin/bash \
+        --rm \
+            tester -c 'npm ci && npx playwright install --with-deps && echo "playwright install done"'

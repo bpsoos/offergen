@@ -1,0 +1,220 @@
+:root {
+    --colors-grey-1: #292929;
+    --colors-grey-2: #2b2b2b;
+    --colors-grey-3: #333333;
+    --colors-grey-4: #414141;
+    --colors-grey-5: #4f4f4f;
+    --colors-grey-6: #565656;
+    --colors-grey-7: #646464;
+    --colors-grey-8: #a1a1a1;
+    --colors-grey-9: #c0c0c0;
+
+
+    --colors-orange: #e5e5e5;
+    --colors-yellow: #fdfd96;
+    --colors-purple: #cc99cc;
+    --colors-purple-dark: #9e759e;
+
+    --border-radius: 5px;
+}
+
+body {
+    background-color: var(--colors-grey-2);
+    color: black;
+    font-family: 'Roboto', sans-serif;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type=number] {
+    -moz-appearance: textfield;
+    appearance: textfield;
+}
+
+
+#itemRowDeleteButton:hover > svg {
+   fill: var(--colors-grey-8);
+}
+
+a {
+	color: white;
+	border-radius: var(--border-radius); 
+	border: 0.1em solid var(--colors-grey-8);
+	background-color: var(--colors-grey-3);
+	padding: 0.5em;
+	font-size: 0.9rem;
+	text-align: center;
+}
+
+a:hover {
+    cursor: pointer;
+    border-color: var(--colors-grey-6);
+}
+
+button:hover {
+    background-color: var(--colors-grey-8)
+}
+
+button {
+	font-size: 0.9rem;
+	border: none;
+	border-radius: var(--border-radius);
+	padding: 0.5rem;
+    background-color: var(--colors-grey-9)
+}
+
+input {
+	border: 0.025rem solid var(--colors-grey-7);
+	border-radius: var(--border-radius);
+	padding-left: 0.5rem;
+	padding-right: 0.5rem;
+	font-size: 0.9rem;
+}
+
+.card-container {
+	display: grid;
+	grid-template-columns: auto minmax(300px , 800px) auto;
+}
+
+.card-container-small {
+	grid-template-columns: auto minmax(100px , 400px) auto;
+}
+
+.card-container .card {
+	grid-column-start: 2;
+	background-color: var(--colors-grey-4);
+	border-radius: var(--border-radius);
+	border: 0.1rem solid var(--colors-grey-7);
+	padding: 1rem;
+}
+
+.card-container .no-background {
+	background-color: var(--colors-grey-2); 
+	border: none;
+}
+
+
+.sidebar {
+	border: 0.1rem solid var(--colors-grey-7);
+	background-color: var(--colors-grey-5);
+	border-radius: var(--border-radius);
+	margin-left: auto;
+	margin-right: auto;
+	display: grid;
+	grid-template-columns: repeat(9, minmax(0, 1fr));
+    grid-gap: 0.5rem;
+	margin-top: 0.1rem;
+	margin-bottom: 0.8rem;
+	padding: 0.5rem;
+	max-width: 1440px;
+}
+
+.error-msg {
+	color: red;
+}
+
+.error-msg svg {
+	width: 1em;
+	height: 1em;
+	vertical-align: -0.125em;
+}
+
+
+.items-editor {
+	color: white;
+}
+
+.items-editor h2 {
+    margin-top: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.items-editor .about {
+	color: white;
+	font-size: 1.5rem;
+	margin-bottom: 0.5rem;
+}
+
+.items-editor .container {
+	display: grid;
+    padding: 0.5rem;
+	grid-template-columns: 70% 18% 6% 6%;
+}
+
+.items-editor .generator-button {
+	margin-top: 0.7rem;
+	margin-left: 35%;
+	margin-right: 35%;
+}
+
+.items-editor .row-container {
+	display: contents;
+}
+
+.items-editor .header-element {
+	font-size: 1rem;
+	padding-top: 0.75rem;
+	text-align: center;
+}
+
+.items-editor .header-element.price {
+	text-align: center;
+	grid-column-start: span 3;
+}
+
+.items-editor .body-element {
+	border-top: 0.05rem solid white;
+	padding-top: 0.75rem;
+	font-size: 1rem;
+}
+
+.items-editor .body-element.price {
+	text-align: right;
+	grid-column-start: span 2;
+}
+
+.items-editor .row-element {
+	padding-left: 0.25rem;
+	padding-top: 0.25rem;
+	padding-right: 0.25rem;
+	padding-bottom: 0.1rem;
+}
+
+.items-editor .add-item-button {
+	grid-column-start: span 2;
+	font-size: 0.9rem;
+}
+
+.items-editor .error-msg {
+	grid-column-start: span 4;
+    margin-top: 0.5rem;
+}
+
+.items-editor .price-input {
+    margin-left: 0.5rem;
+    margin-right: 0.5rem;
+}
+
+.items-editor .delete-button {
+	border: none;
+	background-color: var(--colors-grey-4);
+	width: 2rem;
+	height: 2rem;
+	margin-left: 0.3rem;
+	margin-right: 0.3rem;
+	padding: 0;
+	border-radius: var(--border-radius);
+	font-size: 0.9rem;
+}
+
+.items-editor .delete-icon {
+	width: 1.5em;
+	fill: var(--colors-grey-9);
+	height: 1.6em;
+	vertical-align: -1em;
+}
+

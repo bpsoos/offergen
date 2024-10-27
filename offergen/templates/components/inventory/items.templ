@@ -1,0 +1,19 @@
+package inventory
+
+import (
+	"offergen/endpoint/models"
+	"offergen/templates/layouts"
+)
+
+templ (it *InventoryTemplater) Items(items []models.Item) {
+	<div id="itemsContainer">
+		if len(items) == 0 {
+			@layouts.Card("add-item-note") {
+				<div>Add your first item by clicking "Create new"!</div>
+			}
+		}
+		for _, item := range items {
+			@it.Item(item)
+		}
+	</div>
+}

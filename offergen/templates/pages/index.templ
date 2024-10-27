@@ -1,0 +1,39 @@
+package pages
+
+import (
+	"offergen/templates/components"
+	"offergen/templates/components/items"
+	"offergen/templates/layouts"
+)
+
+templ Index(isLoggedIn bool) {
+	<!DOCTYPE html>
+	<html>
+		<head>
+			<title>Offergen: inventory manager and offering generator</title>
+			<script src="https://unpkg.com/htmx.org@2.0.2" integrity="sha384-Y7hw+L/jvKeWIRRkqWYfPcvVxHzVzn5REgzbawhxAuQGwX1XWe70vji+VSeHOThJ" crossorigin="anonymous"></script>
+			<link rel="stylesheet" href="styles/index.css"/>
+		</head>
+		<body>
+			@components.Sidebar(isLoggedIn)
+			@layouts.Card("no-background", "items-editor") {
+				<h2>Preview: Create an inventory</h2>
+			}
+			@layouts.Card() {
+				<div id="itemsEditor" class="items-editor">
+					<div id="itemsContainer" class="container">
+						@items.ItemsTable()
+					</div>
+					<button
+						hx-post="/preview/generate"
+						hx-include=".items-editor input[type='hidden']"
+						hx-target="body"
+						class={ "generator-button" }
+					>
+						Generate offering
+					</button>
+				</div>
+			}
+		</body>
+	</html>
+}

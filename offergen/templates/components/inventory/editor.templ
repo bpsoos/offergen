@@ -1,0 +1,40 @@
+package inventory
+
+import "offergen/templates/layouts"
+
+templ (it *InventoryTemplater) ItemCreator() {
+	@layouts.Card() {
+		<div id="editorContainer">
+			<form
+				hx-post="/inventory/item"
+				id="itemCreatorForm"
+				hx-target="body"
+				class="item-creator"
+			>
+				<input
+					name="Name"
+					type="text"
+					placeholder="item name..."
+					pattern="[A-Za-z0-9 ]+"
+					title="letters, numbers, and spaces."
+					required
+				/>
+				<input
+					name="Price"
+					type="number"
+					placeholder="price..."
+					min="0"
+					class="price-input"
+					required
+				/>
+				<button
+					type="submit"
+					class="add-item-button"
+				>
+					Create
+				</button>
+				<div class="error-msg"></div>
+			</form>
+		</div>
+	}
+}

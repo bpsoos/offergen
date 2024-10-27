@@ -1,0 +1,12 @@
+package auth
+
+templ ConfirmSignUpForm(email string) {
+	<div id="confirm-signup-form">
+		<p class="about">No user found with the email address: <i>{ email }.</i></p>
+		<p class="about">Do you want to continue by signing up?</p>
+		<form hx-post="/auth/signup" hx-target="#auth-element">
+			<button type="submit">Confirm</button>
+			<input type="hidden" name="Email" value={ email }/>
+		</form>
+	</div>
+}

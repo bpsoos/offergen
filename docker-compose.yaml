@@ -1,0 +1,54 @@
+services:
+  offergen:
+    image: ${OFFERGEN_TESTER_IMAGE}
+    entrypoint: "/bin/bash"
+    command: "-c 'exit 0'"
+    environment:
+      AUTH_BASE_URL: http://hanko:8000
+      AUTH__COOKIE_NAME: offergen__auth
+      AUTH__FLOW_COOKIE__NAME: offergen__auth_flow
+      AUTH__FLOW_COOKIE__PATH: /auth
+      AUTH__FLOW_COOKIE__IS_SECURE: false
+      HTTP_CLIENT__READ_TIMEOUT: 1s
+      HTTP_CLIENT__WRITE_TIMEOUT: 1s
+      HTTP_CLIENT__MAX_IDLE_CONN_DURATION: 1m
+      HTTP_CLIENT__MAX_CONN_DURATION: 1m
+      HTTP_CLIENT__HANKO_TIMEOUTS__INIT_REGISTRATION_FLOW: 300ms
+      HTTP_CLIENT__HANKO_TIMEOUTS__REGISTER_CLIENT_CAPABILITIES_FOR_REGISTER: 300ms
+      HTTP_CLIENT__HANKO_TIMEOUTS__REGISTER_LOGIN_IDENTIFIER: 1s
+      HTTP_CLIENT__HANKO_TIMEOUTS__VERIFY_PASSCODE: 1s
+      HTTP_CLIENT__HANKO_TIMEOUTS__INIT_LOGIN_FLOW: 600ms
+      HTTP_CLIENT__HANKO_TIMEOUTS__REGISTER_CLIENT_CAPABILITIES_FOR_LOGIN: 600ms
+      HTTP_CLIENT__HANKO_TIMEOUTS__CONTINUE_WITH_LOGIN_IDENTIFIER: 600ms
+      DEV_PASSWORD: testpassword
+      RATE_LIMITER_ENABLED: false
+      POSTGRES_URL: "postgres://testuser:testpassword@postgres:5432/testdb?sslmode=disable"
+      STYLES_MAX_AGE_SECONDS: "0"
+      MEDIA_MAX_AGE_SECONDS: "0"
+    volumes:
+      - ./offergen:/source
+    depends_on:
+      migrator:
+        condition: service_completed_successfully
+  postgres:
+    image: postgres
+    environment:
+      POSTGRES_USER: testuser
+      POSTGRES_PASSWORD: testpassword
+      POSTGRES_DB: testdb
+    healthcheck:
+      test: "pg_isready -d testdb -U testuser"
+      interval: 2s
+      timeout: 5s
+      retries: 10
+      start_period: 1s
+  migrator:
+    image: ${OFFERGEN_TESTER_IMAGE}
+    command: run main.go migrate
+    environment:
+      POSTGRES_URL: "postgres://testuser:testpassword@postgres:5432/testdb?sslmode=disable"
+    volumes:
+      - "./offergen:/source"
+    depends_on:
+      postgres:
+        condition: service_healthy

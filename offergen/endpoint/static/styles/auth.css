@@ -1,0 +1,81 @@
+.email-form {
+	grid-column-start: 2;
+	display: grid;
+	grid-template-columns: 1fr;
+	grid-gap: 0.5rem;
+	padding: 1rem;
+	padding-bottom: 2rem;
+}
+
+.email-form input {
+    padding: 0.5rem;
+	grid-row: 1;
+}
+
+.email-form button {
+	grid-row: 2;
+}
+
+.email-form .error-msg {
+	grid-row: 3;
+    height: 1rem;
+	border: none;
+}
+
+#confirm-signup-form {
+    text-align: center;
+}
+
+#confirm-signup-form .about {
+	color: white;
+	margin-bottom: 0.2rem;
+	margin-top: 0.2rem;
+}
+
+#confirm-signup-form button {
+	margin-top: 1rem;
+}
+
+#verify-passcode-form {
+	text-align: center;
+	padding: 1rem;
+	padding-bottom: 2rem;
+}
+
+#verify-passcode-form .about {
+	color: white;
+	margin-bottom: 0.2rem;
+	margin-top: 0.2rem;
+	text-align: center;
+}
+
+#verify-passcode-form .passcode-form {
+	display: grid;
+	grid-template-columns: repeat(12, minmax(0 , 0.3fr));
+	grid-gap: 0.5rem;
+}
+
+#verify-passcode-form .passcode-input {
+    text-align: center;
+    padding: 0.5rem;
+    font-size: 1rem;
+    grid-row-start: 2;
+	grid-column-start: 5;
+	grid-column-end: 9;
+}
+
+#verify-passcode-form .submit-button {
+    grid-row-start: 3;
+	grid-column-start: 5;
+	grid-column-end: 9;
+}
+
+#verify-passcode-form .error-msg {
+    margin-left: 0;
+    grid-row-start: 4;
+	grid-column-start: 1;
+	grid-column-end: 13;
+    text-align: center;
+    height: 1rem;
+	border: none;
+}

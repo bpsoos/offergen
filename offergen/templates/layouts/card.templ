@@ -1,0 +1,17 @@
+package layouts
+
+templ Card(styles ...string) {
+	<div class="card-container">
+		<div class={ "card", styles }>
+			{ children... }
+		</div>
+	</div>
+}
+
+templ SmallCard(styles ...string) {
+	<div class="card-container card-container-small">
+		<div class={ "card", styles }>
+			{ children... }
+		</div>
+	</div>
+}

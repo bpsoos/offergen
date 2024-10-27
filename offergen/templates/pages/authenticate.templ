@@ -1,0 +1,21 @@
+package pages
+
+import (
+	"offergen/templates/components"
+	"offergen/templates/components/auth"
+	"offergen/templates/elements"
+	"offergen/templates/layouts"
+)
+
+templ Authenticate(errorMsg string) {
+	<link rel="stylesheet" href="styles/auth.css"/>
+	@components.Sidebar(false)
+	@elements.Auth() {
+		@layouts.SmallCard("no-background") {
+			<h2 style="color: white">Sign in or sign up</h2>
+		}
+		@layouts.SmallCard() {
+			@auth.AuthenticateInitForm(errorMsg)
+		}
+	}
+}

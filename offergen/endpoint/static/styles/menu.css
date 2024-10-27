@@ -1,0 +1,53 @@
+.menu {
+	color: white;
+	padding: 0.5rem;
+	display: grid;
+	grid-template-columns: 70% 30%;
+}
+
+.menu .title {
+	grid-column-start: span 2;
+	margin-top: 0.5rem;
+	text-align: center;
+}
+
+.menu .item {
+    display: contents;
+}
+
+.menu .attr {
+	padding: 0.5rem;
+	padding-bottom: 0.25rem;
+	background-color: var(--colors-grey-3);
+}
+
+.menu .item:nth-of-type(2n) .attr {
+	background-color: var(--colors-grey-6);
+}
+
+.menu .name {
+	padding: 0.5rem;
+	padding-bottom: 0.25rem;
+	background-color: var(--colors-grey-3);
+}
+
+.menu .price {
+	text-align: right;
+	border-top-right-radius: var(--border-radius);
+	border-bottom-right-radius: var(--border-radius);
+}
+
+.menu .name {
+	border-top-left-radius: var(--border-radius);
+	border-bottom-left-radius: var(--border-radius);
+}
+
+.menu-link {
+	display: grid;
+	grid-template-columns: auto 5rem auto;
+}
+
+.menu-link a {
+	grid-column-start: 2;
+	margin-bottom: 0.5rem;
+}
