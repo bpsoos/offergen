@@ -45,6 +45,5 @@ logs:
 down:
     docker compose down --remove-orphans --timeout=0 --volumes
 
-
 build-prod: generate
     {{docker_run}} {{src_mount}} --entrypoint /bin/bash {{offergen_tester_image}} -c 'export GOOS=linux && export GOARCH=amd64 && go build -o build/'
