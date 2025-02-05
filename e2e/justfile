@@ -39,7 +39,7 @@ test-repeat: build-deps install-playwright-if-needed
     {{docker_compose}} run -p 9323:9323 --entrypoint npx --rm -ti tester playwright test --repeat-each=5
 
 test-ci: build-deps install-playwright-if-needed
-    {{docker_compose}} run -p 9323:9323 -e CI=1 --entrypoint npx --rm tester playwright test
+    {{docker_compose}} run -p 9323:9323 -e CI=1 --entrypoint npx --rm tester playwright test --repeat-each=5
 
 install-playwright-if-needed:
     echo "{{ \
