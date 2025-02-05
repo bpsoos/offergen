@@ -10,4 +10,3 @@ requirements: docker, [just](https://just.systems/man/en/packages.html)
 - clone repository
 - run `just e2e/up`
 - open http://localhost:8082 in the broser
-- the dev env has basic auth enabled by default with username: admin password: testpassword
