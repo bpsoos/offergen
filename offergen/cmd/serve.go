@@ -23,7 +23,6 @@ import (
 	"time"
 
 	"github.com/gofiber/fiber/v2"
-	"github.com/gofiber/fiber/v2/middleware/basicauth"
 	"github.com/gofiber/fiber/v2/middleware/limiter"
 	fiberLogger "github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/jmoiron/sqlx"
@@ -234,13 +233,4 @@ func getRateLimiterMiddleware() fiber.Handler {
 		SkipSuccessfulRequests: false,
 		LimiterMiddleware:      limiter.FixedWindow{},
 	})
-}
-
-func getBasicAuthMiddleware(config *config.Config) fiber.Handler {
-	return basicauth.New(
-		basicauth.Config{
-			Users: map[string]string{
-				"admin": config.DevPassword,
-			},
-		})
 }

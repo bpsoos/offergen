@@ -23,6 +23,9 @@ generate-watch: build
 fmt: build
     {{docker_run}} -it {{src_mount}} --entrypoint bash {{offergen_tester_image}} -c "gofmt -w . && templ fmt templates"
 
+lint:
+    docker run --rm {{src_mount}} --workdir /source --entrypoint golangci-lint golangci/golangci-lint run ./...
+
 shell: build
     {{docker_run}} -p 8080:80 -it {{src_mount}} --entrypoint /bin/bash {{offergen_tester_image}}
 
