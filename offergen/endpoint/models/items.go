@@ -3,9 +3,9 @@ package models
 import "github.com/google/uuid"
 
 type Item struct {
-	ID    uuid.UUID `form:"ID" validate:"required"`
-	Price uint32    `form:"Price" validate:"required"`
-	Name  string    `form:"Name" validate:"required,max=500"`
+	ID    uuid.UUID `json:"id" form:"ID" validate:"required"`
+	Price uint32    `json:"price" form:"Price" validate:"required"`
+	Name  string    `json:"name" form:"Name" validate:"required,max=500"`
 }
 
 type ItemsForm struct {
@@ -13,8 +13,8 @@ type ItemsForm struct {
 }
 
 type AddItemInput struct {
-	Name  string `form:"Name" validate:"required,max=500"`
-	Price uint32 `form:"Price" validate:"required"`
+	Name  string `form:"Name" validate:"required,max=500" json:"name"`
+	Price uint32 `form:"Price" validate:"required" json:"price"`
 }
 
 type DeleteItemInput struct {

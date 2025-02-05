@@ -1,6 +1,7 @@
 package inventory
 
 import (
+	"encoding/json"
 	"offergen/endpoint"
 	"offergen/endpoint/models"
 	"regexp"
@@ -9,19 +10,9 @@ import (
 )
 
 func (h *Handler) Create(ctx *fiber.Ctx) error {
-	values := endpoint.ToURLValues(ctx.Request().PostArgs())
-	if values == nil {
-		logger.Info("no args in request")
-		return h.renderItemCreateError(ctx, "missing fields")
-	}
-
-	input := new(models.AddItemInput)
-	err := h.formDecoder.Decode(input, values)
+	input, err := h.parseItems(ctx)
 	if err != nil {
-		errDecode := h.formDecoder.MustParseDecodeErrors(err)
-		logger.Info("decode error", "errMsg", errDecode[0].Error())
-
-		return h.renderItemCreateError(ctx, errDecode[0].Field()+": validation error")
+		return err
 	}
 
 	err = h.structValidator.Validate(input)
@@ -51,17 +42,59 @@ func (h *Handler) Create(ctx *fiber.Ctx) error {
 		"itemName", input.Name,
 		"itemPrice", input.Price,
 	)
-	_, err = h.inventoryManager.CreateItem(input, h.tokenVerifier.GetUserID(ctx))
+	item, err := h.inventoryManager.CreateItem(input, h.tokenVerifier.GetUserID(ctx))
 	if err != nil {
 		logger.Info("could not create item", "inputName", input.Name)
 		return h.renderItemCreateError(ctx, "something went wrong")
 	}
 
+	if acceptsJSON(ctx) {
+		return ctx.JSON(&item)
+	}
+
 	return h.renderer.Render(ctx, h.pageTemplater.Inventory(nil))
+}
+
+func acceptsJSON(ctx *fiber.Ctx) bool {
+	return string(ctx.Request().Header.Peek(fiber.HeaderAccept)) == fiber.MIMEApplicationJSON
+}
+
+func isJSONContentType(ctx *fiber.Ctx) bool {
+	return string(ctx.Request().Header.ContentType()) == fiber.MIMEApplicationJSON
 }
 
 func (h *Handler) CreatePage(ctx *fiber.Ctx) error {
 	return h.renderer.Render(ctx, h.inventoryTemplater.ItemCreator())
+}
+
+func (h *Handler) parseItems(ctx *fiber.Ctx) (*models.AddItemInput, error) {
+	input := new(models.AddItemInput)
+	if isJSONContentType(ctx) {
+		body := ctx.Body()
+		err := json.Unmarshal(body, &input)
+		if err != nil {
+
+			logger.Info("json parse error", "err", err)
+
+			return nil, err
+		}
+		return input, nil
+	}
+
+	values := endpoint.ToURLValues(ctx.Request().PostArgs())
+	if values == nil {
+		logger.Info("no args in request")
+		return nil, h.renderItemCreateError(ctx, "missing fields")
+	}
+
+	err := h.formDecoder.Decode(input, values)
+	if err != nil {
+		errDecode := h.formDecoder.MustParseDecodeErrors(err)
+		logger.Info("decode error", "errMsg", errDecode[0].Error())
+
+		return nil, h.renderItemCreateError(ctx, errDecode[0].Field()+": validation error")
+	}
+	return input, err
 }
 
 func (h *Handler) renderItemCreateError(ctx *fiber.Ctx, message string) error {

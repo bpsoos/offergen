@@ -28,7 +28,7 @@ type (
 	}
 
 	ItemPersister interface {
-		Create(item models.Item, ownerID string) error
+		Create(item *models.Item, ownerID string) error
 		BatchGet(from, amount uint, ownerID string) ([]models.Item, error)
 		Delete(itemID, ownerID string) error
 		ItemCount(ownerID string) (int, error)
@@ -42,21 +42,21 @@ func NewInventoryManager(deps InventoryManagerDeps) *InventoryManager {
 	}
 }
 
-func (im *InventoryManager) CreateItem(item *models.AddItemInput, ownerID string) (string, error) {
-	id := uuid.New()
-
-	if err := im.itemPersister.Create(
-		models.Item{
-			ID:    id,
-			Price: item.Price,
-			Name:  item.Name,
-		},
-		ownerID,
-	); err != nil {
-		return "", err
+func (im *InventoryManager) CreateItem(input *models.AddItemInput, ownerID string) (*models.Item, error) {
+	item := &models.Item{
+		ID:    uuid.New(),
+		Price: input.Price,
+		Name:  input.Name,
 	}
 
-	return id.String(), nil
+	if err := im.itemPersister.Create(
+		item,
+		ownerID,
+	); err != nil {
+		return nil, err
+	}
+
+	return item, nil
 }
 
 func (im *InventoryManager) BatchGetItem(from, amount uint, ownerID string) ([]models.Item, error) {

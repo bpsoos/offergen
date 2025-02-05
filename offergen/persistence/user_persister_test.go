@@ -111,8 +111,9 @@ var _ = Describe("user persister", func() {
 		})
 
 		Context("called with single user in db", func() {
-			It("delete the user", func() {
-				userID := uuid.NewString()
+			var userID string
+			BeforeEach(func() {
+				userID = uuid.NewString()
 
 				_, err := db.NamedExec(
 					`INSERT INTO users (id,email) VALUES (:id,:email)`,
@@ -122,8 +123,9 @@ var _ = Describe("user persister", func() {
 					},
 				)
 				Expect(err).ToNot(HaveOccurred())
-
-				err = persistence.NewUserPersister(db).Delete(userID)
+			})
+			It("should delete the user", func() {
+				err := persistence.NewUserPersister(db).Delete(userID)
 				Expect(err).ToNot(HaveOccurred())
 
 				var users []User
@@ -133,6 +135,80 @@ var _ = Describe("user persister", func() {
 				)
 				Expect(err).ToNot(HaveOccurred())
 				Expect(users).To(HaveLen(0))
+			})
+
+			Context("with user having a single inventory", func() {
+				BeforeEach(func() {
+					_, err := db.NamedExec(
+						`INSERT INTO inventory (owner_id,title,is_published) VALUES (:owner_id,:title,:is_published)`,
+						&Inventory{
+							OwnerID:     userID,
+							Title:       "dummy_title",
+							IsPublished: true,
+						},
+					)
+					Expect(err).ToNot(HaveOccurred())
+				})
+				It("should delete the user and the inventory", func() {
+					err := persistence.NewUserPersister(db).Delete(userID)
+					Expect(err).ToNot(HaveOccurred())
+
+					var users []User
+					err = db.Select(
+						&users,
+						`SELECT * FROM users;`,
+					)
+					Expect(err).ToNot(HaveOccurred())
+					Expect(users).To(HaveLen(0))
+					var inventories []Inventory
+					err = db.Select(
+						&inventories,
+						`SELECT * FROM inventory;`,
+					)
+					Expect(err).ToNot(HaveOccurred())
+					Expect(users).To(HaveLen(0))
+				})
+
+				Context("with the inventory having a single item", func() {
+					BeforeEach(func() {
+						_, err := db.NamedExec(
+							`INSERT INTO items (id,owner_id,price,name) VALUES (:id,:owner_id,:price,:name)`,
+							&Item{
+								ID:      uuid.NewString(),
+								OwnerID: userID,
+								Price:   1000,
+								Name:    "dummy_name",
+							},
+						)
+						Expect(err).ToNot(HaveOccurred())
+					})
+					It("should delete the user and the inventory", func() {
+						err := persistence.NewUserPersister(db).Delete(userID)
+						Expect(err).ToNot(HaveOccurred())
+
+						var users []User
+						err = db.Select(
+							&users,
+							`SELECT * FROM users;`,
+						)
+						Expect(err).ToNot(HaveOccurred())
+						Expect(users).To(HaveLen(0))
+						var inventories []Inventory
+						err = db.Select(
+							&inventories,
+							`SELECT * FROM inventory;`,
+						)
+						Expect(err).ToNot(HaveOccurred())
+						Expect(users).To(HaveLen(0))
+						var items []Item
+						err = db.Select(
+							&items,
+							`SELECT * FROM items;`,
+						)
+						Expect(err).ToNot(HaveOccurred())
+						Expect(users).To(HaveLen(0))
+					})
+				})
 			})
 		})
 		Context("called with multiple users in db", func() {

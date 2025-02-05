@@ -7,12 +7,10 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/filesystem"
 )
 
-func (r *Router) AddRoutes(app *fiber.App, basicAuthMiddleware fiber.Handler) {
+func (r *Router) AddRoutes(app *fiber.App) {
 	app.Get("/health", r.rootHandler.Health)
 	event := app.Group("/event")
 	event.Post("/users/create", r.userHandler.Create)
-
-	app.Use(basicAuthMiddleware)
 
 	app.Get("/", r.rootHandler.Index)
 

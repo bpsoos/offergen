@@ -2,7 +2,7 @@ import { defineConfig, devices } from '@playwright/test';
 
 export default defineConfig({
     testDir: './offergen-tests',
-    timeout: 900000,
+    timeout: 30 * 1000,
     fullyParallel: true,
     forbidOnly: !!process.env.CI,
     retries: 0,

@@ -36,7 +36,7 @@ var _ = Describe("items", func() {
 				)
 				Expect(err).ToNot(HaveOccurred())
 
-				item := models.Item{
+				item := &models.Item{
 					ID:    uuid.New(),
 					Name:  "dummyItem",
 					Price: 12000,

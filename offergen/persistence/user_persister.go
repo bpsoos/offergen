@@ -54,7 +54,16 @@ func (up *UserPersister) GetEmail(id string) (string, error) {
 }
 
 func (up *UserPersister) Delete(id string) error {
-	result, err := up.db.Exec(`DELETE FROM users WHERE id=$1`, id)
+	result, err := up.db.Exec(
+		`
+        with
+            items_deleted     as (DELETE FROM items WHERE owner_id=$1),
+            inventory_deleted as (DELETE FROM inventory WHERE owner_id=$1),
+            users_deleted     as (DELETE FROM users WHERE id=$1 RETURNING 1)
+        SELECT * FROM users_deleted;
+        `,
+		id,
+	)
 	if err != nil {
 		return err
 	}
@@ -64,9 +73,6 @@ func (up *UserPersister) Delete(id string) error {
 	}
 	if count == 0 {
 		return common_deps.ErrUserNotFound
-	}
-	if count > 1 {
-		return errors.New("unexpected rows affected")
 	}
 
 	return nil

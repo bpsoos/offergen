@@ -53,7 +53,7 @@ type (
 	}
 
 	InventoryManager interface {
-		CreateItem(item *models.AddItemInput, ownerID string) (string, error)
+		CreateItem(item *models.AddItemInput, ownerID string) (*models.Item, error)
 		BatchGetItem(from, amount uint, ownerID string) ([]models.Item, error)
 		ItemCount(ownerID string) (int, error)
 		DeleteItem(itemID, ownerID string) error

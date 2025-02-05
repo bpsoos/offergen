@@ -147,7 +147,7 @@ func (sc *ServeCmd) Execute() {
 		app.Use(getRateLimiterMiddleware())
 	}
 
-	router.AddRoutes(app, getBasicAuthMiddleware(config))
+	router.AddRoutes(app)
 
 	logger.Info("Starting to listen")
 	if err := app.Listen(":" + config.Port); err != nil {

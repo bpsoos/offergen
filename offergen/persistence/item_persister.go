@@ -24,7 +24,7 @@ type DBItem struct {
 	Name    string `db:"name"`
 }
 
-func (im *ItemPersister) Create(item models.Item, ownerID string) error {
+func (im *ItemPersister) Create(item *models.Item, ownerID string) error {
 	_, err := im.db.NamedExec(
 		`INSERT INTO items (id,owner_id,price,name) VALUES (:id,:owner_id,:price,:name)`,
 		DBItem{
