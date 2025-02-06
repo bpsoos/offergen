@@ -24,6 +24,17 @@ shell: up
 sql:
     {{docker_compose}} exec offergen-postgres psql testdb -U testuser
 
+dump-db:
+    {{docker_compose}} exec offergen-postgres \
+        pg_dump \
+        -U testuser \
+        -d testdb \
+        -t items \
+        -t inventory \
+        -t users \
+        --data-only \
+        -f /example_data/$(date +%s)_tables.sql
+
 test: build-deps install-playwright-if-needed
     {{docker_compose}} run -p 9323:9323 --entrypoint npx --rm -ti tester playwright test
 

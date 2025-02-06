@@ -56,6 +56,8 @@ services:
       POSTGRES_USER: testuser
       POSTGRES_PASSWORD: testpassword
       POSTGRES_DB: testdb
+    volumes:
+      - "./e2e/example_data:/example_data"
     healthcheck:
       test: "pg_isready -d testdb -U testuser"
       interval: 2s
@@ -64,7 +66,7 @@ services:
       start_period: 1s
   offergen-migrator:
     image: "offergen-tester-image"
-    command: "run main.go migrate"
+    command: run main.go migrate
     environment:
       POSTGRES_URL: "postgres://testuser:testpassword@offergen-postgres:5432/testdb?sslmode=disable"
     volumes:
@@ -72,6 +74,18 @@ services:
     depends_on:
       offergen-postgres:
         condition: service_healthy
+  offergen-testdata:
+    image: postgres
+    entrypoint: psql
+    command:
+      - postgres://testuser:testpassword@offergen-postgres:5432/testdb?sslmode=disable
+      - -f
+      - /example_data/tables.sql
+    volumes:
+      - "./e2e/example_data:/example_data"
+    depends_on:
+      offergen-migrator:
+        condition: service_completed_successfully
 
   reverse-proxy:
     image: nginx
@@ -95,6 +109,15 @@ services:
       timeout: 5s
       retries: 10
       start_period: 1s
+  hanko-importer:
+    image: ghcr.io/teamhanko/hanko:v1.0.2
+    command: user import -i /example_data/users.json
+    depends_on:
+      hanko-migrator:
+        condition: service_completed_successfully
+    volumes:
+      - "./e2e/hanko_config.yaml:/config/config.yaml"
+      - "./e2e/example_data:/example_data"
   hanko:
     image: ghcr.io/teamhanko/hanko:v1.0.2
     command: serve all
