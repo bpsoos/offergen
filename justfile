@@ -1,4 +1,4 @@
-export GO_VERSION := "1.22.3"
+export GO_VERSION := "1.23.6"
 offergen_tester_image := "offergen-tester-image"
 export OFFERGEN_TESTER_IMAGE := offergen_tester_image
 

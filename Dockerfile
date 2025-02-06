@@ -7,8 +7,8 @@ WORKDIR /source
 
 COPY offergen/go.mod offergen/go.sum /source/
 RUN go mod download
-RUN go install github.com/a-h/templ/cmd/templ@v0.2.747
-RUN go install github.com/onsi/ginkgo/v2/ginkgo@v2.17.3
-RUN go install github.com/cosmtrek/air@v1.52.0
+RUN go install github.com/a-h/templ/cmd/templ@v0.3.833
+RUN go install github.com/onsi/ginkgo/v2/ginkgo@v2.22.2
+RUN go install github.com/air-verse/air@v1.61.7
 
 ENTRYPOINT [ "go" ]
