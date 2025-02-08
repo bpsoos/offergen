@@ -72,11 +72,7 @@ func (im *InventoryManager) CreateInventory(inventory *models.Inventory) (*model
 }
 
 func (im *InventoryManager) GetInventory(ownerID string) (*models.Inventory, error) {
-	return &models.Inventory{
-		OwnerID:     ownerID,
-		Title:       "offergen",
-		IsPublished: true,
-	}, nil
+	return im.inventoryPersister.Get(ownerID)
 }
 
 func (im *InventoryManager) UpdateInventory(ownerID string, input *models.UpdateInventoryInput) (*models.Inventory, error) {

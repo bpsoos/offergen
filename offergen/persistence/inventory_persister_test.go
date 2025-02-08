@@ -65,7 +65,7 @@ var _ = Describe("inventory persister", func() {
 				inventory = &Inventory{
 					OwnerID:     userID,
 					Title:       "dummy_inventory",
-					IsPublished: true,
+					IsPublished: false,
 				}
 				_, err := db.NamedExec(
 					`
@@ -82,7 +82,7 @@ var _ = Describe("inventory persister", func() {
 						userID,
 						&models.UpdateInventoryInput{
 							Title:       "dummy_updated_title",
-							IsPublished: models.Point(false),
+							IsPublished: true,
 						})
 					Expect(err).To(Not(HaveOccurred()))
 
@@ -93,20 +93,20 @@ var _ = Describe("inventory persister", func() {
 					Expect(inventories).To(ConsistOf(Inventory{
 						OwnerID:     userID,
 						Title:       "dummy_updated_title",
-						IsPublished: false,
+						IsPublished: true,
 					}))
 				})
 				It("should return the inventory", func() {
 					expectedInv := &models.Inventory{
 						OwnerID:     userID,
 						Title:       "dummy_updated_title",
-						IsPublished: false,
+						IsPublished: true,
 					}
 					updatedInv, err := persistence.NewInventoryPersister(db).Update(
 						userID,
 						&models.UpdateInventoryInput{
 							Title:       "dummy_updated_title",
-							IsPublished: models.Point(false),
+							IsPublished: true,
 						})
 
 					Expect(err).To(Not(HaveOccurred()))

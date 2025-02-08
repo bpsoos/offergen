@@ -12,6 +12,9 @@ up: build-deps
 logs:
     {{docker_compose}} logs -f
 
+applogs:
+    {{docker_compose}} logs offergen -f
+
 logs-dump:
     {{docker_compose}} logs
 

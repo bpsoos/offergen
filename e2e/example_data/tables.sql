@@ -30,7 +30,7 @@ COPY public.users (id, email) FROM stdin;
 -- Data for Name: inventory; Type: TABLE DATA; Schema: public; Owner: testuser
 --
 
-COPY public.inventory (owner_id, title, is_published) FROM stdin;
+COPY public.inventories (owner_id, title, is_published) FROM stdin;
 2d318789-1438-49ca-a51c-28927da2c68b	Offering	f
 \.
 

@@ -43,7 +43,8 @@ up: build
     docker compose up -d
 
 logs:
-    docker compose logs
+    docker compose logs -f
+
 
 down:
     docker compose down --remove-orphans --timeout=0 --volumes
