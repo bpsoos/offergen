@@ -90,7 +90,11 @@ var _ = Describe("inventory persister", func() {
 					err = db.Select(&inventories, `SELECT * FROM inventories;`)
 
 					Expect(err).To(Not(HaveOccurred()))
-					Expect(inventories).To(ConsistOf(inventory))
+					Expect(inventories).To(ConsistOf(Inventory{
+						OwnerID:     userID,
+						Title:       "dummy_updated_title",
+						IsPublished: false,
+					}))
 				})
 				It("should return the inventory", func() {
 					expectedInv := &models.Inventory{
