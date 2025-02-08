@@ -15,6 +15,7 @@ type Router struct {
 	previewHandler      PreviewHandler
 	userHandler         UserHandler
 	inventoryHandler    InventoryHandler
+	offeringHandler     OfferingHandler
 }
 
 type RouterDeps struct {
@@ -23,6 +24,7 @@ type RouterDeps struct {
 	AuthHandler      AuthHandler
 	PreviewHandler   PreviewHandler
 	UserHandler      UserHandler
+	OfferingHandler  OfferingHandler
 	InventoryHandler InventoryHandler
 }
 
@@ -63,6 +65,10 @@ type InventoryHandler interface {
 	UpdateInventory(ctx *fiber.Ctx) error
 }
 
+type OfferingHandler interface {
+	GetOffering(ctx *fiber.Ctx) error
+}
+
 type UserHandler interface {
 	Create(ctx *fiber.Ctx) error
 	Profile(ctx *fiber.Ctx) error
@@ -84,5 +90,6 @@ func NewRouter(config *RouterConfig, deps *RouterDeps) *Router {
 		previewHandler:      deps.PreviewHandler,
 		userHandler:         deps.UserHandler,
 		inventoryHandler:    deps.InventoryHandler,
+		offeringHandler:     deps.OfferingHandler,
 	}
 }

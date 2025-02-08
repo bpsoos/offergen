@@ -1,7 +1,15 @@
 package inventory
 
-type InventoryTemplater struct{}
+type InventoryTemplater struct {
+	publicBaseURL string
+}
 
-func NewInventoryTemplater() *InventoryTemplater {
-	return &InventoryTemplater{}
+type InventoryTemplaterConfig struct {
+	PublicBaseURL string
+}
+
+func NewInventoryTemplater(config InventoryTemplaterConfig) *InventoryTemplater {
+	return &InventoryTemplater{
+		publicBaseURL: config.PublicBaseURL,
+	}
 }

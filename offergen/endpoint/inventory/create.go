@@ -52,7 +52,10 @@ func (h *Handler) Create(ctx *fiber.Ctx) error {
 		return ctx.JSON(&item)
 	}
 
-	return h.renderer.Render(ctx, h.pageTemplater.Inventory(nil))
+	return h.renderer.Render(
+		ctx,
+		h.pageTemplater.Inventory(h.tokenVerifier.GetUserID(ctx)),
+	)
 }
 
 func acceptsJSON(ctx *fiber.Ctx) bool {

@@ -37,7 +37,7 @@ type (
 	}
 
 	PageTemplater interface {
-		Inventory(items []models.Item) templ.Component
+		Inventory(userID string) templ.Component
 	}
 
 	InventoryTemplater interface {
@@ -46,7 +46,7 @@ type (
 		Paginator(current, last int) templ.Component
 		SettingsPage(inv *models.Inventory) templ.Component
 		InventoryDetails(inv *models.Inventory) templ.Component
-		ItemsPage() templ.Component
+		ItemsPage(userID string) templ.Component
 	}
 
 	ErrorTemplater interface {

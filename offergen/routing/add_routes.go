@@ -56,4 +56,7 @@ func (r *Router) AddRoutes(app *fiber.App) {
 	inventory.Get("/item-pages", r.inventoryHandler.ItemPages)
 	inventory.Post("/item", r.inventoryHandler.Create)
 	inventory.Delete("/item/:id", r.inventoryHandler.Delete)
+
+	offerings := app.Group("/o")
+	offerings.Get(":owner_id", r.offeringHandler.GetOffering)
 }

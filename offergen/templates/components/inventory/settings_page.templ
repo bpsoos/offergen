@@ -30,8 +30,12 @@ templ (it *InventoryTemplater) InventoryDetails(inv *models.Inventory) {
 				<input id="inventory-title" name="Title" type="text" value={ inv.Title }/>
 				<label for="inventory-published">Published: </label>
 				<input id="inventory-published" name="Published" type="checkbox" checked?={ inv.IsPublished }/>
-				<label>Publish URL: </label>
-				<div>https://offergen.com/offering/asdf123</div>
+				if inv.IsPublished {
+					<label>Public URL: </label>
+				} else {
+					<label>Publish URL: </label>
+				}
+				<div>{ it.publicBaseURL + "/o/" + inv.OwnerID }</div>
 				<button type="submit">Update</button>
 			</form>
 			<script>

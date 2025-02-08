@@ -10,12 +10,14 @@ import (
 	"offergen/endpoint"
 	authEndpoint "offergen/endpoint/auth"
 	"offergen/endpoint/inventory"
+	"offergen/endpoint/offerings"
 	previewEndpoint "offergen/endpoint/preview"
 	"offergen/endpoint/users"
 	"offergen/persistence"
 	"offergen/routing"
 	"offergen/service"
 	"offergen/templates"
+	"offergen/templates/components"
 	errorTemplates "offergen/templates/components/errors"
 	inventoryTemplates "offergen/templates/components/inventory"
 	pageTemplates "offergen/templates/pages"
@@ -60,7 +62,12 @@ func (sc *ServeCmd) Execute() {
 		},
 		&jwtAdapter.Deps{Cache: jwksCache},
 	)
-	inventoryTemplater := inventoryTemplates.NewInventoryTemplater()
+	inventoryTemplater := inventoryTemplates.NewInventoryTemplater(
+		inventoryTemplates.InventoryTemplaterConfig{
+			PublicBaseURL: "http://localhost:8082",
+		},
+	)
+	offeringTemplater := components.NewOfferingTemplater()
 	db := getDB(config.PostgresURL)
 	inventoryManager := service.NewInventoryManager(service.InventoryManagerDeps{
 		ItemPersister:      persistence.NewItemPersister(db),
@@ -130,6 +137,13 @@ func (sc *ServeCmd) Execute() {
 						},
 					),
 					InventoryTemplater: inventoryTemplater,
+				},
+			),
+			OfferingHandler: offerings.NewHandler(
+				&offerings.Dependencies{
+					InventoryManager:  inventoryManager,
+					OfferingTemplater: offeringTemplater,
+					Renderer:          templates.NewRenderer(),
 				},
 			),
 		})

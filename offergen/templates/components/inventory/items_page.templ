@@ -2,48 +2,26 @@ package inventory
 
 import "offergen/templates/layouts"
 
-templ (it *InventoryTemplater) ItemsPage() {
+templ (it *InventoryTemplater) ItemsPage(userID string) {
 	<div id="inventoryPageContainer">
 		@layouts.Card("no-background", "inventory-title") {
 			<h2 style="color: white">Inventory items</h2>
-			<a
-				hx-get="/inventory/settings-page"
-				hx-swap="outerHTML"
-				hx-target="#inventoryPageContainer"
-			>
+			<a hx-get="/inventory/settings-page" hx-swap="outerHTML" hx-target="#inventoryPageContainer">
 				Settings
 			</a>
 		}
 		<div id="inventoryItemsContainer">
 			@layouts.Card("no-background", "add-new-container") {
-				<a
-					id="storePage"
-					hx-get="TODO"
-					hx-target="TODO"
-				>
-					Store page
+				<a id="storePage" hx-get={"/o/" + userID } hx-target="body">
+					Public page
 				</a>
-				<a
-					id="createNew"
-					hx-get="/inventory/create-page"
-					hx-target="#inventoryItemsContainer"
-				>
+				<a id="createNew" hx-get="/inventory/create-page" hx-target="#inventoryItemsContainer">
 					Create new
 				</a>
 			}
-			<div
-				id="itemsContainer"
-				hx-get="/inventory/items?from0&amount=10"
-				hx-swap="outerHTML"
-				hx-trigger="load"
-			></div>
+			<div id="itemsContainer" hx-get="/inventory/items?from0&amount=10" hx-swap="outerHTML" hx-trigger="load"></div>
 			<div id="paginator-container">
-				<div
-					id="paginator"
-					hx-get="/inventory/item-pages?current=1"
-					hx-trigger="load"
-					hx-swap="outerHTML"
-				></div>
+				<div id="paginator" hx-get="/inventory/item-pages?current=1" hx-trigger="load" hx-swap="outerHTML"></div>
 			</div>
 		</div>
 	</div>

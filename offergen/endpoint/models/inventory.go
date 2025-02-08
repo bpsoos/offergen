@@ -3,7 +3,7 @@ package models
 type (
 	UpdateInventoryInput struct {
 		Title       string `form:"Title" validate:"required"`
-		IsPublished bool  `form:"Published"`
+		IsPublished bool   `form:"Published"`
 	}
 
 	Inventory struct {

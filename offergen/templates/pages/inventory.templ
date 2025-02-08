@@ -1,12 +1,9 @@
 package pages
 
-import (
-	"offergen/endpoint/models"
-	"offergen/templates/components"
-)
+import "offergen/templates/components"
 
-templ (pr *PageTemplater) Inventory(items []models.Item) {
+templ (pr *PageTemplater) Inventory(userID string) {
 	<link rel="stylesheet" href={ "styles/inventory.css?cache-id=" + pr.cacheID }/>
 	@components.Sidebar(true)
-	@pr.inventoryTemplater.ItemsPage()
+	@pr.inventoryTemplater.ItemsPage(userID)
 }
