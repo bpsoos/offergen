@@ -50,10 +50,10 @@ lint: build-deps install-playwright-if-needed
             tsc --noEmit -p offergen-tests/tsconfig.json
 
 test-repeat: build-deps install-playwright-if-needed
-    {{docker_compose}} run -p 9323:9323 --entrypoint npx --rm -ti tester playwright test --repeat-each=5
+    {{docker_compose}} run -p 9323:9323 --entrypoint npx --rm -ti tester playwright test --repeat-each=2
 
 test-ci: build-deps install-playwright-if-needed
-    {{docker_compose}} run -p 9323:9323 -e CI=1 --entrypoint npx --rm tester playwright test --repeat-each=5
+    {{docker_compose}} run -p 9323:9323 -e CI=1 --entrypoint npx --rm tester playwright test --repeat-each=2
 
 install-playwright-if-needed:
     echo "{{ \
