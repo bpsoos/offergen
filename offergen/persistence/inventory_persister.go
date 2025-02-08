@@ -47,9 +47,9 @@ func (ip *InventoryPersister) Create(inventory *models.Inventory) (*models.Inven
 }
 
 func (ip *InventoryPersister) Update(ownerID string, input *models.UpdateInventoryInput) (*models.Inventory, error) {
-	var createdInv Inventory
+	var updatedInv Inventory
 	err := ip.db.Get(
-		&createdInv,
+		&updatedInv,
 		`
             UPDATE inventories
             SET title=$2, is_published=$3
@@ -65,12 +65,29 @@ func (ip *InventoryPersister) Update(ownerID string, input *models.UpdateInvento
 	}
 
 	return &models.Inventory{
-		OwnerID:     createdInv.OwnerID,
-		Title:       createdInv.Title,
-		IsPublished: createdInv.IsPublished,
+		OwnerID:     updatedInv.OwnerID,
+		Title:       updatedInv.Title,
+		IsPublished: updatedInv.IsPublished,
 	}, nil
 }
 
 func (ip *InventoryPersister) Get(ownerID string) (*models.Inventory, error) {
-	return nil, nil
+	var inv Inventory
+	err := ip.db.Get(
+		&inv,
+		`
+            SELECT owner_id,title,is_published FROM inventories
+            WHERE owner_id=$1
+        `,
+		ownerID,
+	)
+	if err != nil {
+		return nil, err
+	}
+
+	return &models.Inventory{
+		OwnerID:     inv.OwnerID,
+		Title:       inv.Title,
+		IsPublished: inv.IsPublished,
+	}, nil
 }

@@ -59,23 +59,40 @@ var _ = Describe("inventory persister", func() {
 				})
 			})
 		})
-		Describe("update inventory", func() {
-			Context("called an inventory existing", func() {
-				BeforeEach(func() {
-					_, err := db.NamedExec(
-						`
+		Context("when an inventory exists", func() {
+			var inventory *Inventory
+			BeforeEach(func() {
+				inventory = &Inventory{
+					OwnerID:     userID,
+					Title:       "dummy_inventory",
+					IsPublished: true,
+				}
+				_, err := db.NamedExec(
+					`
                             INSERT INTO inventories (owner_id,title,is_published)
                             VALUES (:owner_id,:title,:is_published)
                         `,
-						&Inventory{
-							OwnerID:     userID,
-							Title:       "dummy_inventory",
-							IsPublished: true,
-						},
-					)
-					Expect(err).ToNot(HaveOccurred())
-				})
+					inventory,
+				)
+				Expect(err).ToNot(HaveOccurred())
+			})
+			Describe("update inventory", func() {
 				It("should update the inventory", func() {
+					_, err := persistence.NewInventoryPersister(db).Update(
+						userID,
+						&models.UpdateInventoryInput{
+							Title:       "dummy_updated_title",
+							IsPublished: models.Point(false),
+						})
+					Expect(err).To(Not(HaveOccurred()))
+
+					inventories := []Inventory{}
+					err = db.Select(&inventories, `SELECT * FROM inventories;`)
+
+					Expect(err).To(Not(HaveOccurred()))
+					Expect(inventories).To(ConsistOf(inventory))
+				})
+				It("should return the inventory", func() {
 					expectedInv := &models.Inventory{
 						OwnerID:     userID,
 						Title:       "dummy_updated_title",
@@ -87,21 +104,24 @@ var _ = Describe("inventory persister", func() {
 							Title:       "dummy_updated_title",
 							IsPublished: models.Point(false),
 						})
-					Expect(err).To(Not(HaveOccurred()))
 
-					inventories := []Inventory{}
-					err = db.Select(&inventories, `SELECT * FROM inventories;`)
 					Expect(err).To(Not(HaveOccurred()))
-
-					Expect(inventories).To(ConsistOf(Inventory{
-						OwnerID:     expectedInv.OwnerID,
-						Title:       expectedInv.Title,
-						IsPublished: expectedInv.IsPublished,
-					}))
 					Expect(updatedInv).To(Equal(expectedInv))
+				})
+			})
+			Describe("get inventory", func() {
+				It("should return the inventory", func() {
+					expectedInv := &models.Inventory{
+						OwnerID:     userID,
+						Title:       inventory.Title,
+						IsPublished: inventory.IsPublished,
+					}
+					returnedInv, err := persistence.NewInventoryPersister(db).Get(userID)
+					Expect(err).To(Not(HaveOccurred()))
+
+					Expect(returnedInv).To(Equal(expectedInv))
 				})
 			})
 		})
 	})
-
 })
