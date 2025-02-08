@@ -19,7 +19,7 @@ func GetDB() *sqlx.DB {
 
 func CleanDB(db *sqlx.DB) {
 	_, err := db.Exec(`
-		DELETE FROM inventory;
+		DELETE FROM inventories;
 		DELETE FROM items;
 		DELETE FROM users;
     `)

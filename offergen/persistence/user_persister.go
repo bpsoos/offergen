@@ -58,7 +58,7 @@ func (up *UserPersister) Delete(id string) error {
 		`
         with
             items_deleted     as (DELETE FROM items WHERE owner_id=$1),
-            inventory_deleted as (DELETE FROM inventory WHERE owner_id=$1),
+            inventories_deleted as (DELETE FROM inventories WHERE owner_id=$1),
             users_deleted     as (DELETE FROM users WHERE id=$1 RETURNING 1)
         SELECT * FROM users_deleted;
         `,

@@ -6,6 +6,7 @@ import (
 	"offergen/persistence"
 
 	"github.com/google/uuid"
+	"github.com/jmoiron/sqlx"
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 )
@@ -18,9 +19,10 @@ type Item struct {
 }
 
 var _ = Describe("items", func() {
-	var db = GetDB()
+	var db *sqlx.DB
 
 	BeforeEach(func() {
+		db = GetDB()
 		CleanDB(db)
 	})
 	Describe("create", func() {

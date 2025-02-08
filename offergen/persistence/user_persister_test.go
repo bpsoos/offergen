@@ -5,6 +5,7 @@ import (
 	"offergen/persistence"
 
 	"github.com/google/uuid"
+	"github.com/jmoiron/sqlx"
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 )
@@ -15,9 +16,10 @@ type User struct {
 }
 
 var _ = Describe("user persister", func() {
-	var db = GetDB()
+	var db *sqlx.DB
 
 	BeforeEach(func() {
+		db = GetDB()
 		CleanDB(db)
 	})
 
@@ -140,7 +142,7 @@ var _ = Describe("user persister", func() {
 			Context("with user having a single inventory", func() {
 				BeforeEach(func() {
 					_, err := db.NamedExec(
-						`INSERT INTO inventory (owner_id,title,is_published) VALUES (:owner_id,:title,:is_published)`,
+						`INSERT INTO inventories (owner_id,title,is_published) VALUES (:owner_id,:title,:is_published)`,
 						&Inventory{
 							OwnerID:     userID,
 							Title:       "dummy_title",
@@ -163,7 +165,7 @@ var _ = Describe("user persister", func() {
 					var inventories []Inventory
 					err = db.Select(
 						&inventories,
-						`SELECT * FROM inventory;`,
+						`SELECT * FROM inventories;`,
 					)
 					Expect(err).ToNot(HaveOccurred())
 					Expect(users).To(HaveLen(0))
@@ -196,7 +198,7 @@ var _ = Describe("user persister", func() {
 						var inventories []Inventory
 						err = db.Select(
 							&inventories,
-							`SELECT * FROM inventory;`,
+							`SELECT * FROM inventories;`,
 						)
 						Expect(err).ToNot(HaveOccurred())
 						Expect(users).To(HaveLen(0))

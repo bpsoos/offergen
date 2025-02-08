@@ -23,22 +23,52 @@ func NewInventoryPersister(db *sqlx.DB) *InventoryPersister {
 }
 
 func (ip *InventoryPersister) Create(inventory *models.Inventory) (*models.Inventory, error) {
-	_, err := ip.db.NamedExec(`
-        INSERT INTO inventory (owner_id,title,is_published)
-        VALUES (:owner_id,:title,:is_published)
+	var createdInv Inventory
+	err := ip.db.Get(
+		&createdInv,
+		`
+            INSERT INTO inventories (owner_id,title,is_published)
+            VALUES ($1,$2,$3)
+            RETURNING owner_id,title,is_published
         `,
-		&Inventory{
-			OwnerID:     inventory.OwnerID,
-			Title:       inventory.Title,
-			IsPublished: inventory.IsPublished,
-		},
+		inventory.OwnerID,
+		inventory.Title,
+		inventory.IsPublished,
 	)
+	if err != nil {
+		return nil, err
+	}
 
-	return nil, err
+	return &models.Inventory{
+		OwnerID:     createdInv.OwnerID,
+		Title:       createdInv.Title,
+		IsPublished: createdInv.IsPublished,
+	}, nil
 }
 
 func (ip *InventoryPersister) Update(ownerID string, input *models.UpdateInventoryInput) (*models.Inventory, error) {
-	return nil, nil
+	var createdInv Inventory
+	err := ip.db.Get(
+		&createdInv,
+		`
+            UPDATE inventories
+            SET title=$2, is_published=$3
+            WHERE owner_id=$1
+            RETURNING owner_ID, title, is_published
+        `,
+		ownerID,
+		input.Title,
+		input.IsPublished,
+	)
+	if err != nil {
+		return nil, err
+	}
+
+	return &models.Inventory{
+		OwnerID:     createdInv.OwnerID,
+		Title:       createdInv.Title,
+		IsPublished: createdInv.IsPublished,
+	}, nil
 }
 
 func (ip *InventoryPersister) Get(ownerID string) (*models.Inventory, error) {
