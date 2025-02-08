@@ -18,13 +18,9 @@ type (
 	}
 
 	InventoryPersister interface {
-		Create(inventory *models.Inventory) error
-		Update(input *UpdateInventoryInput) error
-	}
-
-	UpdateInventoryInput struct {
-		Title       string
-		IsPublished bool
+		Create(inventory *models.Inventory) (*models.Inventory, error)
+		Get(ownerID string) (*models.Inventory, error)
+		Update(ownerId string, input *models.UpdateInventoryInput) (*models.Inventory, error)
 	}
 
 	ItemPersister interface {
@@ -71,10 +67,18 @@ func (im *InventoryManager) ItemCount(ownerID string) (int, error) {
 	return im.itemPersister.ItemCount(ownerID)
 }
 
-func (im *InventoryManager) CreateInventory(inventory *models.Inventory) error {
+func (im *InventoryManager) CreateInventory(inventory *models.Inventory) (*models.Inventory, error) {
 	return im.inventoryPersister.Create(inventory)
 }
 
-func (im *InventoryManager) UpdateInventory(input *models.UpdateInventoryInput) error {
-	return nil
+func (im *InventoryManager) GetInventory(ownerID string) (*models.Inventory, error) {
+	return &models.Inventory{
+		OwnerID:     ownerID,
+		Title:       "offergen",
+		IsPublished: true,
+	}, nil
+}
+
+func (im *InventoryManager) UpdateInventory(ownerID string, input *models.UpdateInventoryInput) (*models.Inventory, error) {
+	return im.inventoryPersister.Update(ownerID, input)
 }

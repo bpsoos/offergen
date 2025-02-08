@@ -2,7 +2,6 @@ package persistence
 
 import (
 	"offergen/endpoint/models"
-	"offergen/service"
 
 	"github.com/jmoiron/sqlx"
 )
@@ -23,7 +22,7 @@ func NewInventoryPersister(db *sqlx.DB) *InventoryPersister {
 	return &InventoryPersister{db: db}
 }
 
-func (ip *InventoryPersister) Create(inventory *models.Inventory) error {
+func (ip *InventoryPersister) Create(inventory *models.Inventory) (*models.Inventory, error) {
 	_, err := ip.db.NamedExec(`
         INSERT INTO inventory (owner_id,title,is_published)
         VALUES (:owner_id,:title,:is_published)
@@ -35,9 +34,13 @@ func (ip *InventoryPersister) Create(inventory *models.Inventory) error {
 		},
 	)
 
-	return err
+	return nil, err
 }
 
-func (ip *InventoryPersister) Update(input *service.UpdateInventoryInput) error {
-	return nil
+func (ip *InventoryPersister) Update(ownerID string, input *models.UpdateInventoryInput) (*models.Inventory, error) {
+	return nil, nil
+}
+
+func (ip *InventoryPersister) Get(ownerID string) (*models.Inventory, error) {
+	return nil, nil
 }

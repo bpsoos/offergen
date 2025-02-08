@@ -45,14 +45,18 @@ func (h *Handler) UpdateInventory(ctx *fiber.Ctx) error {
 	)
 	isPublished := false
 
-	if err := h.inventoryManager.UpdateInventory(&models.UpdateInventoryInput{
-		Title:       "",
-		IsPublished: &isPublished,
-	}); err != nil {
+	inv, err := h.inventoryManager.UpdateInventory(
+		userID,
+		&models.UpdateInventoryInput{
+			Title:       input.Title,
+			IsPublished: &isPublished,
+		},
+	)
+	if err != nil {
 		return ctx.SendStatus(fiber.StatusInternalServerError)
 	}
 
-	return ctx.SendStatus(fiber.StatusOK)
+	return h.renderer.Render(ctx, h.inventoryTemplater.InventoryDetails(inv))
 }
 
 func (h *Handler) renderUpdateInventoryError(ctx *fiber.Ctx, errorMsg string) error {

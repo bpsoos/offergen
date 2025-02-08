@@ -17,6 +17,14 @@ templ (it *InventoryTemplater) ItemsPage() {
 		<div id="inventoryItemsContainer">
 			@layouts.Card("no-background", "add-new-container") {
 				<a
+					id="storePage"
+					hx-get="TODO"
+					hx-target="TODO"
+				>
+					Store page
+				</a>
+				<a
+					id="createNew"
 					hx-get="/inventory/create-page"
 					hx-target="#inventoryItemsContainer"
 				>

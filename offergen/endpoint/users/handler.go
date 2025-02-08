@@ -35,7 +35,7 @@ type (
 	}
 
 	InventoryManager interface {
-		CreateInventory(inventory *models.Inventory) error
+		CreateInventory(inventory *models.Inventory) (*models.Inventory, error)
 	}
 
 	Authenticator interface {

@@ -84,7 +84,11 @@
     margin: 0;
 }
 
-.add-new-container a {
+.add-new-container #storePage {
+    grid-column-start: 1;
+}
+
+.add-new-container #createNew {
     grid-column-start: -2;
 }
 

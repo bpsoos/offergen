@@ -63,7 +63,7 @@ func (h *Handler) Create(ctx *fiber.Ctx) error {
 	}
 	logger.Info("user saved", "userID", user.ID)
 
-	if err := h.inventoryManager.CreateInventory(&models.Inventory{
+	if _, err := h.inventoryManager.CreateInventory(&models.Inventory{
 		OwnerID:     user.ID,
 		Title:       "Offering",
 		IsPublished: false,

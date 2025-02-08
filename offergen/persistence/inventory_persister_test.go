@@ -35,7 +35,7 @@ var _ = Describe("inventory persister", func() {
 				)
 				Expect(err).ToNot(HaveOccurred())
 
-				err = persistence.NewInventoryPersister(db).Create(&models.Inventory{
+				_, err = persistence.NewInventoryPersister(db).Create(&models.Inventory{
 					OwnerID:     userID,
 					Title:       "offering",
 					IsPublished: false,

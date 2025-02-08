@@ -44,7 +44,8 @@ type (
 		Items(items []models.Item) templ.Component
 		ItemCreator() templ.Component
 		Paginator(current, last int) templ.Component
-		SettingsPage() templ.Component
+		SettingsPage(inv *models.Inventory) templ.Component
+		InventoryDetails(inv *models.Inventory) templ.Component
 		ItemsPage() templ.Component
 	}
 
@@ -57,8 +58,9 @@ type (
 		BatchGetItem(from, amount uint, ownerID string) ([]models.Item, error)
 		ItemCount(ownerID string) (int, error)
 		DeleteItem(itemID, ownerID string) error
-		CreateInventory(inventory *models.Inventory) error
-		UpdateInventory(input *models.UpdateInventoryInput) error
+		CreateInventory(inventory *models.Inventory) (*models.Inventory, error)
+		GetInventory(ownerID string) (*models.Inventory, error)
+		UpdateInventory(ownerID string, input *models.UpdateInventoryInput) (*models.Inventory, error)
 	}
 )
 

@@ -1,49 +1,45 @@
 package inventory
 
-import "offergen/templates/layouts"
+import (
+"offergen/endpoint/models"
+"offergen/templates/layouts"
+)
 
-templ (it *InventoryTemplater) SettingsPage() {
-	<div id="inventoryPageContainer">
-		@layouts.Card("no-background", "inventory-title") {
-			<h2 style="color: white">Inventory settings</h2>
-			<a
-				hx-get="/inventory/items-page"
-				hx-swap="outerHTML"
-				hx-target="#inventoryPageContainer"
-			>
-				Items
-			</a>
-		}
-		@it.InventoryDetails()
-	</div>
+templ (it *InventoryTemplater) SettingsPage(inv *models.Inventory) {
+<div id="inventoryPageContainer">
+    @layouts.Card("no-background", "inventory-title") {
+    <h2 style="color: white">Inventory settings</h2>
+    <a hx-get="/inventory/items-page" hx-swap="outerHTML" hx-target="#inventoryPageContainer">
+        Items
+    </a>
+    }
+    @it.InventoryDetails(inv)
+</div>
 }
 
-templ (it *InventoryTemplater) InventoryDetails() {
-	<div id="inventorySettingsContainer">
-		@layouts.Card() {
-			<form
-				id="inventorySettingsForm"
-				class="settings-form"
-				hx-post="/inventory/update"
-				hx-target="#inventorySettingsContainer"
-			>
-				<label for="inventory-title">Title: </label>
-				<input id="inventory-title" name="Title" type="text" value="offering"/>
-				<label for="inventory-published">Published: </label>
-				<input id="inventory-published" name="Published" type="checkbox"/>
-				<label>Publish URL: </label>
-				<div>https://offergen.com/offering/asdf123</div>
-				<button type="submit">Update</button>
-			</form>
-			<script>
-                document.body.addEventListener('htmx:configRequest', function(evt) {
-                    if (evt.detail.elt.id == "inventorySettingsForm") {
-                        if(!document.getElementById("inventory-published").checked) {
-                            evt.detail.parameters["Published"] = "off";
-                        }
-                    }
-                });
-            </script>
-		}
-	</div>
+templ (it *InventoryTemplater) InventoryDetails(inv *models.Inventory) {
+<div id="inventorySettingsContainer">
+    @layouts.Card() {
+    <form id="inventorySettingsForm" class="settings-form" hx-post="/inventory/update"
+        hx-target="#inventorySettingsContainer">
+        <label for="inventory-title">Title: </label>
+        <input id="inventory-title" name="Title" type="text" value={ inv.Title } />
+        <label for="inventory-published">Published: </label>
+        <input id="inventory-published" name="Published" type="checkbox" checked?={ inv.IsPublished }/>
+        <label>Publish URL: </label>
+        <div>https://offergen.com/offering/asdf123</div>
+        <button type="submit">Update</button>
+    </form>
+    <script>
+        document.body.addEventListener('htmx:configRequest', function (evt) {
+            if (evt.detail.elt.id == "inventorySettingsForm") {
+                if (!document.getElementById("inventory-published").checked) {
+                    evt.detail.parameters["Published"] = "off";
+                }
+            }
+        });
+    </script>
+    }
+</div>
 }
+
