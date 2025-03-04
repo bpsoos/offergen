@@ -1,0 +1,52 @@
+package inventory
+
+import "offergen/templates/layouts"
+import "offergen/endpoint/models"
+import "strconv"
+
+templ Categories(userID string, categories []models.CountedCategory) {
+	<div id="categoriesContainer">
+		@layouts.Card("no-background", "inventory-title") {
+			<h2 style="color: white">Inventory item categories</h2>
+		}
+		@tabs()
+		@layouts.SmallCard("no-background", "item-links") {
+			@CreateCategoryInitLink()
+		}
+		@layouts.SmallCard() {
+			for i := range categories {
+				<div class="category-row">
+					<div>{ categories[i].Name } </div>
+					<div>
+						{ strconv.Itoa(categories[i].Count) }
+						if categories[i].Count == 1 {
+							item
+						} else {
+							items
+						}
+					</div>
+				</div>
+			}
+		}
+	</div>
+}
+
+templ CreateCategoryInitLink() {
+	<a id="addNewCategory" hx-get="/inventory/categories/init" hx-swap="outerHTML">Add new</a>
+}
+
+templ CreateCategoryForm() {
+	<form id="createCategoryForm" hx-post="/inventory/categories" hx-swap="outerHTML">
+		<input
+			class="name"
+			name="name"
+			type="text"
+			placeholder="name..."
+			maxlength="50"
+			pattern="[A-Za-z0-9 .,!?;'\x22:&\-\(\)]+"
+			title={ "letters, numbers, spaces and symbols: .,!?;'\" :()&-" }
+			required
+		/>
+		<button class="submit" type="submit">Create</button>
+	</form>
+}

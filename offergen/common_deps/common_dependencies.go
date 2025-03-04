@@ -25,6 +25,7 @@ type FieldError interface {
 
 type Renderer interface {
 	Render(ctx *fiber.Ctx, component templ.Component) error
+	RenderWithChildren(ctx *fiber.Ctx, children, component templ.Component) error
 }
 
 var ErrUserNotFound = errors.New("user not found")

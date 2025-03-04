@@ -6,16 +6,13 @@ import (
 	"offergen/endpoint"
 	"offergen/endpoint/models"
 	"offergen/logging"
-	"offergen/templates"
-	"offergen/templates/components"
-	"regexp"
 
 	"github.com/go-playground/form"
 	"github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"
 )
 
-func (i *Handler) Generate(ctx *fiber.Ctx) error {
+func (h *Handler) Generate(ctx *fiber.Ctx) error {
 	logger := logging.GetLogger()
 	values := endpoint.ToURLValues(ctx.Request().PostArgs())
 	if values == nil {
@@ -23,39 +20,27 @@ func (i *Handler) Generate(ctx *fiber.Ctx) error {
 		return ctx.SendStatus(http.StatusUnprocessableEntity)
 	}
 
-	items := i.convertItems(&values)
-	pattern, err := regexp.Compile(models.AllowedNamePattern)
-	if err != nil {
-		logger.Error(
-			"allowed name pattern is an invalid regex",
-			"allowedNamePattern", models.AllowedNamePattern,
-		)
-		panic(err)
-	}
-
+	items := h.convertItems(&values)
 	for _, item := range items {
-		err := i.structValidator.Validate(&item)
-		if err != nil {
-			validationErrors := i.structValidator.MustParseValidationErrors(err)
-			logger.Error(
-				"invalid item in input",
-				"firstErrField", validationErrors[0].Field(),
-				"firstErrMsg", validationErrors[0].Error(),
-			)
-			return ctx.SendStatus(http.StatusUnprocessableEntity)
+		err := h.structValidator.Validate(&item)
+		if err == nil {
+			continue
 		}
-		if !pattern.MatchString(item.Name) {
-			logger.Error(
-				"item with disallowed name in input",
-				"itemName", item.Name,
-			)
-			return ctx.SendStatus(http.StatusUnprocessableEntity)
-		}
+		validationErrors := h.structValidator.MustParseValidationErrors(err)
+		logger.Error(
+			"invalid item in input",
+			"firstErrField", validationErrors[0].Field(),
+			"firstErrMsg", validationErrors[0].Error(),
+		)
+		return ctx.SendStatus(http.StatusUnprocessableEntity)
 	}
 	logger.Info("got raw items", "itemsLen", len(items))
 	logger.Info("parsed items")
 
-	return templates.Render(ctx, components.Menu(items))
+	return h.renderer.Render(
+		ctx,
+		h.offeringTemplater.Offering(items),
+	)
 }
 
 func (i *Handler) convertItems(values *url.Values) []models.Item {

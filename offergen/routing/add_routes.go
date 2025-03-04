@@ -47,14 +47,16 @@ func (r *Router) AddRoutes(app *fiber.App) {
 	inventory.Use(r.verifier.VerifyUser)
 
 	inventory.Get("", r.inventoryHandler.Editor)
+	inventory.Get("/categories", r.inventoryHandler.BatchGetCategory)
+	inventory.Post("/categories", r.inventoryHandler.CreateCategory)
+	inventory.Get("/categories/init", r.inventoryHandler.CreateCategoryInit)
 	inventory.Get("/settings-page", r.inventoryHandler.SettingsPage)
 	inventory.Post("/update", r.inventoryHandler.UpdateInventory)
 
 	inventory.Get("/create-page", r.inventoryHandler.CreatePage)
 	inventory.Get("/items", r.inventoryHandler.Items)
-	inventory.Get("/items-page", r.inventoryHandler.ItemsPage)
 	inventory.Get("/item-pages", r.inventoryHandler.ItemPages)
-	inventory.Post("/item", r.inventoryHandler.Create)
+	inventory.Post("/item", r.inventoryHandler.CreateItem)
 	inventory.Delete("/item/:id", r.inventoryHandler.Delete)
 
 	offerings := app.Group("/o")

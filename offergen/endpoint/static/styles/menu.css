@@ -1,53 +1,62 @@
 .menu {
-	color: white;
-	padding: 0.5rem;
-	display: grid;
-	grid-template-columns: 70% 30%;
+    color: white;
+    padding: 0.5rem;
+    display: grid;
+    grid-template-columns: 100%;
 }
 
 .menu .title {
-	grid-column-start: span 2;
-	margin-top: 0.5rem;
-	text-align: center;
+    grid-column-start: 1;
+    grid-column-end: span 2;
+    margin-top: 0.5rem;
+    text-align: center;
 }
 
-.menu .item {
-    display: contents;
+.menu .menuBody {
+    display: grid;
+    grid-template-columns: 50% 50%;
 }
 
-.menu .attr {
-	padding: 0.5rem;
-	padding-bottom: 0.25rem;
-	background-color: var(--colors-grey-3);
+.menu .tabs {
+    grid-column-start: 1;
+    grid-column-end: span 2;
+    border-top: 0.1rem solid var(--colors-grey-8);
+    padding-top: 0.4rem;
 }
 
-.menu .item:nth-of-type(2n) .attr {
-	background-color: var(--colors-grey-6);
+.menu .tabs .tab  {
+    min-width: 4rem;
 }
 
-.menu .name {
-	padding: 0.5rem;
-	padding-bottom: 0.25rem;
-	background-color: var(--colors-grey-3);
+.menu .card {
+    border: none;
 }
 
-.menu .price {
-	text-align: right;
-	border-top-right-radius: var(--border-radius);
-	border-bottom-right-radius: var(--border-radius);
+.menu .card-container {
+    border: none;
 }
 
-.menu .name {
-	border-top-left-radius: var(--border-radius);
-	border-bottom-left-radius: var(--border-radius);
+.menu .attr.name {
+    font-size: 1rem;
+    padding-bottom: 0.5rem;
+}
+.menu .attr.desc {
+    font-size: 0.8rem;
+    padding-bottom: 0.5rem;
+}
+
+.menu .attr.price {
+    color: moccasin;
+    font-size: 1rem;
+    padding-top: 0.5rem;
 }
 
 .menu-link {
-	display: grid;
-	grid-template-columns: auto 5rem auto;
+    display: grid;
+    grid-template-columns: auto 5rem auto;
 }
 
 .menu-link a {
-	grid-column-start: 2;
-	margin-bottom: 0.5rem;
+    grid-column-start: 2;
+    margin-bottom: 0.5rem;
 }

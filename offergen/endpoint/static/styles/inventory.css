@@ -1,12 +1,52 @@
-#editorContainer .item-creator {
+.card-container .inventory-title {
     display: grid;
-    grid-template-columns: 6fr 3fr 1fr;
-    grid-gap: 0.5rem;
+    grid-template-columns: repeat(5, 1fr);
+    margin-top: 1.5rem;
+    margin-bottom: 0.2rem;
+    padding: 1rem;
+    border-bottom: 0.15rem solid var(--colors-grey-7);
+    border-radius: 0;
 }
 
-#editorContainer .error-msg {
-    grid-row-start: 2;
-    min-height: 1.5rem;
+.card-container .inventory-title h2 {
+    grid-column-start: span 2;
+    margin: 0;
+}
+
+.card.no-background.item-links {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-gap: 0.1rem;
+    padding-left: 0rem;
+    padding-right: 0rem;
+    padding-top: 0.2rem;
+    padding-bottom: 0.8rem;
+    margin: 0;
+}
+
+.item-links #storePage {
+    grid-column-start: 1;
+}
+
+.item-links #categories {
+    grid-column-start: -3;
+}
+
+.item-links #settings {
+    grid-column-start: -2;
+}
+
+.item-links #addNewCategory {
+    grid-column-start: -2;
+}
+
+.add-item-note {
+    color: white;
+    margin-top: 0.5rem;
+}
+
+.add-item-note div {
+    padding: 0.25rem;
 }
 
 #itemsContainer .item {
@@ -14,9 +54,20 @@
     color: white;
     grid-template-columns: 6.5fr 3fr 0.5fr;
     grid-gap: 0.5rem;
-    margin-top: 1rem;
+    margin-top: 0.1rem;
     padding: 0rem;
-    padding: 0rem;
+}
+
+#itemsContainer .items-table-header {
+    display: grid;
+    color: white;
+    grid-template-columns: 6.5fr 3fr 0.5fr;
+    grid-gap: 0.5rem;
+    padding: 0;
+}
+
+.items-table-header #createNew {
+    grid-column-start: -2;
 }
 
 #itemsContainer .item div {
@@ -55,7 +106,6 @@
     fill: var(--colors-grey-8);
 }
 
-
 #paginator-container {
     display: grid;
     grid-template-columns: minmax(0, 1fr) 28rem minmax(0, 1fr);
@@ -71,34 +121,6 @@
 #paginator a {
     width: 1.5rem;
     display: inline-block;
-}
-
-#paginator a.current {
-    border-color: var(--colors-grey-6);
-}
-
-.card.no-background.add-new-container {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    padding: 1rem;
-    margin: 0;
-}
-
-.add-new-container #storePage {
-    grid-column-start: 1;
-}
-
-.add-new-container #createNew {
-    grid-column-start: -2;
-}
-
-.add-item-note {
-    color: white;
-    margin-top: 0.5rem;
-}
-
-.add-item-note div {
-    padding: 0.25rem;
 }
 
 .jump-backward,
@@ -119,39 +141,38 @@
     background-image: url('/media/chevrons-right.svg');
 }
 
-.card-container .inventory-title {
+#paginator a.current {
+    border-color: var(--colors-grey-6);
+}
+
+
+#editorContainer .item-creator {
     display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    margin-top: 1.5rem;
-    margin-bottom: 1.5rem;
-    padding: 1rem;
-    border-bottom: 0.15rem solid var(--colors-grey-7);
-    border-radius: 0;
-}
-.card-container .inventory-title a {
-    grid-column-start: -2;
+    color: white;
+    grid-template-columns: 1fr 2fr 1fr;
+    grid-gap: 0.5rem;
 }
 
-.card-container .inventory-title h2 {
-    grid-column-start: span 2;
-    margin: 0;
+#editorContainer .item-creator>* {
+    grid-column-start: 1;
+    grid-column-end: span 3;
 }
 
-
-.title-icon {
-    width: 1.75rem;
-    height: 1.75rem;
-    fill: var(--colors-grey-9);
+#editorContainer .error-msg {
+    grid-row-start: 8;
+    min-height: 1.5rem;
 }
 
-.title-icon:hover {
-    fill: var(--colors-grey-8);
+#editorContainer .add-item-button {
+    grid-column-start: 2;
+    grid-column-end: span 1;
+    grid-row-start: 8;
+    min-height: 1.5rem;
 }
 
 #inventorySettingsContainer {
     color: white;
 }
-
 
 .settings-form {
     display: grid;
@@ -164,7 +185,8 @@
     grid-column-end: 3;
 }
 
-.settings-form input, .settings-form div {
+.settings-form input,
+.settings-form div {
     grid-column-start: 3;
     grid-column-end: 8;
 }
@@ -174,3 +196,39 @@
     grid-column-end: 7;
     margin-top: 1rem;
 }
+
+.settings-form .textlink:hover {
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+
+#categoriesContainer {
+    color: white;
+}
+
+#categoriesContainer .category-row{
+    display: grid;
+    grid-template-columns: 3fr 1fr;
+    padding: 0.1rem;
+    border-radius: var(--border-radius);
+    margin-bottom: 0.5rem;
+}
+
+
+#categoriesContainer .category-row:hover {
+    background-color: var(--colors-grey-6);
+}
+
+#categoriesContainer .item-links #createCategoryForm {
+    display: contents;
+}
+
+#createCategoryForm .name{
+    grid-column-start: 1;
+}
+
+#createCategoryForm .submit{
+    grid-column-start: -2;
+}
+

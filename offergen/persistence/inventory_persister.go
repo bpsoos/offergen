@@ -1,6 +1,7 @@
 package persistence
 
 import (
+	"fmt"
 	"offergen/endpoint/models"
 
 	"github.com/jmoiron/sqlx"
@@ -15,6 +16,11 @@ type (
 		OwnerID     string `db:"owner_id"`
 		Title       string `db:"title"`
 		IsPublished bool   `db:"is_published"`
+	}
+
+	Category struct {
+		OwnerID string `db:"owner_id"`
+		Name    string `db:"name"`
 	}
 )
 
@@ -90,4 +96,79 @@ func (ip *InventoryPersister) Get(ownerID string) (*models.Inventory, error) {
 		Title:       inv.Title,
 		IsPublished: inv.IsPublished,
 	}, nil
+}
+
+func (ip *InventoryPersister) CreateCategory(ownerID string, category string) error {
+	_, err := ip.db.NamedExec(
+		`
+            INSERT INTO categories (owner_id, name) VALUES (:owner_id, :name)
+        `,
+		&Category{
+			OwnerID: ownerID,
+			Name:    category,
+		},
+	)
+	if err != nil {
+		return fmt.Errorf("insert add category error: %v", err)
+	}
+
+	return nil
+}
+
+type CountedCategory struct {
+	Name  string `db:"name"`
+	Count int    `db:"item_count"`
+}
+
+func (ip *InventoryPersister) BatchGetCategory(ownerID string) ([]string, error) {
+	categories := make([]string, 0)
+	err := ip.db.Select(
+		&categories,
+		`
+            SELECT name FROM categories WHERE categories.owner_id=$1;
+        `,
+		ownerID,
+	)
+	if err != nil {
+		return nil, err
+	}
+
+	if len(categories) == 0 {
+		return nil, nil
+	}
+
+	return categories, nil
+
+}
+
+func (ip *InventoryPersister) BatchGetCountedCategory(ownerID string) ([]models.CountedCategory, error) {
+	categories := make([]CountedCategory, 0)
+	err := ip.db.Select(
+		&categories,
+		`
+            SELECT
+                c.name,
+                count(items.owner_id) as item_count
+            FROM (SELECT name, owner_id FROM categories WHERE categories.owner_id=$1) as c
+            LEFT JOIN items ON items.owner_id=c.owner_id and items.category=c.name
+            GROUP BY c.name, items.owner_id;
+        `,
+		ownerID,
+	)
+	if err != nil {
+		return nil, err
+	}
+
+	if len(categories) == 0 {
+		return nil, nil
+	}
+
+	parsedCategories := make([]models.CountedCategory, len(categories))
+	for i := range categories {
+		parsedCategories[i].Count = categories[i].Count
+		parsedCategories[i].Name = categories[i].Name
+	}
+
+	return parsedCategories, nil
+
 }

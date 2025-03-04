@@ -5,19 +5,24 @@ import (
 	"offergen/templates/layouts"
 )
 
-templ (it *InventoryTemplater) SettingsPage(inv *models.Inventory) {
+templ SettingsPage(
+	userID string,
+	publicBaseURL string,
+	inv *models.Inventory,
+) {
 	<div id="inventoryPageContainer">
 		@layouts.Card("no-background", "inventory-title") {
 			<h2 style="color: white">Inventory settings</h2>
-			<a hx-get="/inventory/items-page" hx-swap="outerHTML" hx-target="#inventoryPageContainer">
-				Items
-			</a>
 		}
-		@it.InventoryDetails(inv)
+		@tabs()
+		@InventoryDetails(publicBaseURL, inv)
 	</div>
 }
 
-templ (it *InventoryTemplater) InventoryDetails(inv *models.Inventory) {
+templ InventoryDetails(
+	publicBaseURL string,
+	inv *models.Inventory,
+) {
 	<div id="inventorySettingsContainer">
 		@layouts.Card() {
 			<form
@@ -30,12 +35,18 @@ templ (it *InventoryTemplater) InventoryDetails(inv *models.Inventory) {
 				<input id="inventory-title" name="Title" type="text" value={ inv.Title }/>
 				<label for="inventory-published">Published: </label>
 				<input id="inventory-published" name="Published" type="checkbox" checked?={ inv.IsPublished }/>
+				{{ publicURL := templ.URL(publicBaseURL + "/o/" + inv.OwnerID) }}
 				if inv.IsPublished {
 					<label>Public URL: </label>
+					<div class="textlink" hx-get={ string(publicURL) } hx-push-url="true" hx-target="body">
+						{ string(publicURL) }
+					</div>
 				} else {
 					<label>Publish URL: </label>
+					<div>
+						{ string(publicURL) }
+					</div>
 				}
-				<div>{ it.publicBaseURL + "/o/" + inv.OwnerID }</div>
 				<button type="submit">Update</button>
 			</form>
 			<script>

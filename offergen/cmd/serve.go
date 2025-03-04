@@ -17,11 +17,9 @@ import (
 	"offergen/routing"
 	"offergen/service"
 	"offergen/templates"
-	"offergen/templates/components"
 	errorTemplates "offergen/templates/components/errors"
-	inventoryTemplates "offergen/templates/components/inventory"
-	pageTemplates "offergen/templates/pages"
-	"strconv"
+	inventoryTemplates "offergen/templates/inventory"
+	offeringsTemplates "offergen/templates/offerings"
 	"time"
 
 	"github.com/gofiber/fiber/v2"
@@ -62,12 +60,10 @@ func (sc *ServeCmd) Execute() {
 		},
 		&jwtAdapter.Deps{Cache: jwksCache},
 	)
-	inventoryTemplater := inventoryTemplates.NewInventoryTemplater(
-		inventoryTemplates.InventoryTemplaterConfig{
-			PublicBaseURL: "http://localhost:8082",
-		},
+	inventoryTemplater := inventoryTemplates.NewTemplater(
+		"http://localhost:8082",
 	)
-	offeringTemplater := components.NewOfferingTemplater()
+	offeringTemplater := offeringsTemplates.NewTemplater()
 	db := getDB(config.PostgresURL)
 	inventoryManager := service.NewInventoryManager(service.InventoryManagerDeps{
 		ItemPersister:      persistence.NewItemPersister(db),
@@ -124,18 +120,12 @@ func (sc *ServeCmd) Execute() {
 			),
 			InventoryHandler: inventory.NewHandler(
 				&inventory.Deps{
-					FormDecoder:      decoder,
-					StructValidator:  structValidator,
-					TokenVerifier:    tokenVerifier,
-					InventoryManager: inventoryManager,
-					Renderer:         templates.NewRenderer(),
-					ErrorTemplater:   errorTemplates.NewErrorTemplater(),
-					PageTemplater: pageTemplates.NewPageTemplater(
-						strconv.FormatInt(time.Now().Unix(), 10),
-						&pageTemplates.Deps{
-							InventoryTemplater: inventoryTemplater,
-						},
-					),
+					FormDecoder:        decoder,
+					StructValidator:    structValidator,
+					TokenVerifier:      tokenVerifier,
+					InventoryManager:   inventoryManager,
+					Renderer:           templates.NewRenderer(),
+					ErrorTemplater:     errorTemplates.NewErrorTemplater(),
 					InventoryTemplater: inventoryTemplater,
 				},
 			),

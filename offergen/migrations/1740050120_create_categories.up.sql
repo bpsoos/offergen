@@ -1,0 +1,4 @@
+CREATE TABLE IF NOT EXISTS categories(
+    name VARCHAR (300) PRIMARY KEY NOT NULL,
+    owner_id UUID  REFERENCES users(id) ON DELETE CASCADE
+);

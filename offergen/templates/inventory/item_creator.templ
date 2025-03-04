@@ -1,0 +1,30 @@
+package inventory
+
+import "offergen/templates/layouts"
+
+templ ItemCreator() {
+	@layouts.SmallCard() {
+		<div id="editorContainer">
+			<form hx-post="/inventory/item" id="itemCreatorForm" hx-target="body" class="item-creator">
+				<label for="name">Name:</label>
+				<input
+					name="name"
+					type="text"
+					placeholder="name..."
+					maxlength="150"
+					pattern="[A-Za-z0-9 .,!?;'\x22:&\-\(\)]+"
+					title={ "letters, numbers, spaces and symbols: .,!?;'\" :()&-" }
+					required
+				/>
+				<label for="price">Price:</label>
+				<input name="price" type="number" placeholder="price..." min="0" class="price-input" required/>
+				<label for="desc">Description:</label>
+				<textarea name="desc" type="text" placeholder="description..." maxlength="500"></textarea>
+				<button type="submit" class="add-item-button">
+					Create
+				</button>
+				<div class="error-msg"></div>
+			</form>
+		</div>
+	}
+}

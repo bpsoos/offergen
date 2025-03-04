@@ -6,8 +6,8 @@ import (
 	"strconv"
 )
 
-templ Menu(items []models.Item) {
-	<link rel="stylesheet" href="styles/menu.css"/>
+templ (ot *OfferingTemplater) Offering(items []models.Item) {
+	<link rel="stylesheet" href="/styles/menu.css"/>
 	@layouts.Card() {
 		<div class="menu">
 			<h2 class="title">Offer</h2>
@@ -16,10 +16,7 @@ templ Menu(items []models.Item) {
 			}
 		</div>
 		<div class="menu-link">
-			<a
-				hx-get="/"
-				hx-target="body"
-			>Generate New</a>
+			<a hx-get="/" hx-target="body">Generate New</a>
 		</div>
 	}
 }

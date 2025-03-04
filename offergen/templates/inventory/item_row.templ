@@ -7,7 +7,7 @@ import (
 	"strconv"
 )
 
-templ (it *InventoryTemplater) Item(item models.Item) {
+templ ItemRow(item models.Item) {
 	@layouts.Card("item", fmt.Sprintf("item-%s", item.ID.String())) {
 		<div class="item-name">{ item.Name }</div>
 		<div class="item-price">{ strconv.FormatUint(uint64(item.Price), 10) } USD</div>

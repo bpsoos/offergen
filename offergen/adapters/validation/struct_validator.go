@@ -2,10 +2,13 @@ package validation
 
 import (
 	"offergen/common_deps"
+	"offergen/endpoint/models"
 	"offergen/logging"
 
 	"github.com/go-playground/validator/v10"
 )
+
+var logger = logging.GetLogger()
 
 type StructValidator struct {
 	validator validatorI
@@ -13,17 +16,19 @@ type StructValidator struct {
 
 type validatorI interface {
 	Struct(s interface{}) error
+	RegisterValidation(tag string, fn validator.Func, callValidationEvenIfNull ...bool) error
 }
 
 func NewStructValidator() *StructValidator {
-	return &StructValidator{
+	validator := &StructValidator{
 		validator: validator.New(
 			validator.WithRequiredStructEnabled(),
 		),
 	}
-}
+	models.RegisterUserInputCheck(validator.validator)
 
-var logger = logging.GetLogger()
+	return validator
+}
 
 func (sv StructValidator) Validate(v interface{}) error {
 	return sv.validator.Struct(v)

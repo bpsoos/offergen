@@ -60,7 +60,11 @@ func (h *Handler) UpdateInventory(ctx *fiber.Ctx) error {
 		"isPublished", inv.IsPublished,
 	)
 
-	return h.renderer.Render(ctx, h.inventoryTemplater.InventoryDetails(inv))
+	return h.inventoryTemplater.InventoryDetails(
+		ctx.Context(),
+		ctx.Response().BodyWriter(),
+		inv,
+	)
 }
 
 func (h *Handler) renderUpdateInventoryError(ctx *fiber.Ctx, errorMsg string) error {

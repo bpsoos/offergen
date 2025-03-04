@@ -1,6 +1,8 @@
 package inventory
 
 import (
+	"context"
+	"io"
 	"offergen/common_deps"
 	"offergen/endpoint/models"
 	"offergen/logging"
@@ -15,7 +17,6 @@ type (
 		structValidator    common_deps.StructValidator
 		renderer           common_deps.Renderer
 		tokenVerifier      TokenVerifier
-		pageTemplater      PageTemplater
 		inventoryTemplater InventoryTemplater
 		errorTemplater     ErrorTemplater
 		inventoryManager   InventoryManager
@@ -26,7 +27,6 @@ type (
 		StructValidator    common_deps.StructValidator
 		Renderer           common_deps.Renderer
 		TokenVerifier      TokenVerifier
-		PageTemplater      PageTemplater
 		InventoryTemplater InventoryTemplater
 		ErrorTemplater     ErrorTemplater
 		InventoryManager   InventoryManager
@@ -36,17 +36,52 @@ type (
 		GetUserID(ctx *fiber.Ctx) string
 	}
 
-	PageTemplater interface {
-		Inventory(userID string) templ.Component
-	}
-
 	InventoryTemplater interface {
-		Items(items []models.Item) templ.Component
-		ItemCreator() templ.Component
-		Paginator(current, last int) templ.Component
-		SettingsPage(inv *models.Inventory) templ.Component
-		InventoryDetails(inv *models.Inventory) templ.Component
-		ItemsPage(userID string) templ.Component
+		Items(
+			ctx context.Context,
+			w io.Writer,
+			items []models.Item,
+		) error
+		ItemCreator(
+			ctx context.Context,
+			w io.Writer,
+			userID string,
+		) error
+		Categories(
+			ctx context.Context,
+			w io.Writer,
+			userID string,
+			categories []models.CountedCategory,
+		) error
+		CreateCategoryForm(
+			ctx context.Context,
+			w io.Writer,
+		) error
+		CreateCategoryInitLink(
+			ctx context.Context,
+			w io.Writer,
+		) error
+		SettingsPage(
+			ctx context.Context,
+			w io.Writer,
+			userID string,
+			inv *models.Inventory,
+		) error
+		Paginator(
+			ctx context.Context,
+			w io.Writer,
+			current, last int,
+		) error
+		InventoryDetails(
+			ctx context.Context,
+			w io.Writer,
+			inv *models.Inventory,
+		) error
+		Inventory(
+			ctx context.Context,
+			w io.Writer,
+			userID string,
+		) error
 	}
 
 	ErrorTemplater interface {
@@ -55,12 +90,15 @@ type (
 
 	InventoryManager interface {
 		CreateItem(item *models.AddItemInput, ownerID string) (*models.Item, error)
-		BatchGetItem(from, amount uint, ownerID string) ([]models.Item, error)
+		BatchGetItem(ownerID string, input *models.GetItemsInput) ([]models.Item, error)
 		ItemCount(ownerID string) (int, error)
 		DeleteItem(itemID, ownerID string) error
 		CreateInventory(inventory *models.Inventory) (*models.Inventory, error)
 		GetInventory(ownerID string) (*models.Inventory, error)
 		UpdateInventory(ownerID string, input *models.UpdateInventoryInput) (*models.Inventory, error)
+		CreateCategory(ownerID string, category string) error
+		BatchGetCategory(ownerID string) ([]string, error)
+		BatchGetCountedCategory(ownerID string) ([]models.CountedCategory, error)
 	}
 )
 
@@ -71,7 +109,6 @@ func NewHandler(deps *Deps) *Handler {
 		tokenVerifier:      deps.TokenVerifier,
 		inventoryManager:   deps.InventoryManager,
 		renderer:           deps.Renderer,
-		pageTemplater:      deps.PageTemplater,
 		inventoryTemplater: deps.InventoryTemplater,
 		errorTemplater:     deps.ErrorTemplater,
 	}

@@ -54,15 +54,17 @@ type PreviewHandler interface {
 }
 
 type InventoryHandler interface {
-	Create(ctx *fiber.Ctx) error
+	CreateItem(ctx *fiber.Ctx) error
+	CreateCategory(ctx *fiber.Ctx) error
+	CreateCategoryInit(ctx *fiber.Ctx) error
 	CreatePage(ctx *fiber.Ctx) error
 	Delete(ctx *fiber.Ctx) error
 	Editor(ctx *fiber.Ctx) error
 	Items(ctx *fiber.Ctx) error
 	ItemPages(ctx *fiber.Ctx) error
-	ItemsPage(ctx *fiber.Ctx) error
 	SettingsPage(ctx *fiber.Ctx) error
 	UpdateInventory(ctx *fiber.Ctx) error
+	BatchGetCategory(ctx *fiber.Ctx) error
 }
 
 type OfferingHandler interface {

@@ -1,10 +1,10 @@
 package offerings
 
 import (
+	"context"
+	"io"
 	"offergen/common_deps"
 	"offergen/endpoint/models"
-
-	"github.com/a-h/templ"
 )
 
 type (
@@ -21,12 +21,20 @@ type (
 	}
 
 	InventoryManager interface {
-		BatchGetItem(from, amount uint, ownerID string) ([]models.Item, error)
+		BatchGetItem(
+			ownerID string,
+			input *models.GetItemsInput,
+		) ([]models.Item, error)
 		GetInventory(ownerID string) (*models.Inventory, error)
 	}
 
 	OfferingTemplater interface {
-		Menu(items []models.Item) templ.Component
+		Offering(
+			ctx context.Context,
+			w io.Writer,
+			title string,
+			items []models.Item,
+		) error
 	}
 
 	OfferingManager interface {
@@ -36,8 +44,8 @@ type (
 
 func NewHandler(deps *Dependencies) *Handler {
 	return &Handler{
-		inventoryManager: deps.InventoryManager,
-        offeringTemplater: deps.OfferingTemplater,
-        renderer: deps.Renderer,
+		inventoryManager:  deps.InventoryManager,
+		offeringTemplater: deps.OfferingTemplater,
+		renderer:          deps.Renderer,
 	}
 }

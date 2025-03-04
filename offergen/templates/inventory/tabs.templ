@@ -1,0 +1,17 @@
+package inventory
+
+import "offergen/templates/layouts"
+
+templ tabs() {
+	@layouts.Card("no-background", "item-links") {
+		<a id="inventory" hx-get="/inventory" hx-push-url="true" hx-target="body">
+			Items
+		</a>
+		<a id="categories" hx-get="/inventory/categories" hx-push-url="true" hx-target="body">
+			Categories
+		</a>
+		<a id="settings" hx-get="/inventory/settings-page" hx-push-url="true" hx-target="body">
+			Settings
+		</a>
+	}
+}

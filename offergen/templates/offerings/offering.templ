@@ -1,0 +1,44 @@
+package offerings
+
+import (
+	"offergen/endpoint/models"
+	"offergen/templates/layouts"
+	"strconv"
+)
+
+templ Offering(title string, items []models.Item) {
+	<link rel="stylesheet" href="/styles/menu.css"/>
+	@layouts.Card() {
+		<div class="menu">
+			<h2 class="title">{ title }</h2>
+			<div class="tabs">
+				<button class="tab">All</button>
+				<button class="tab">Foods</button>
+				<button class="tab">Drinks</button>
+			</div>
+			<div class="menuBody">
+				for _, item := range items {
+					@menuItemRow(item)
+				}
+			</div>
+		</div>
+	}
+}
+
+templ menuItemRow(item models.Item) {
+	@layouts.Card() {
+		<div class="item">
+			<div class="attr name">
+				{ item.Name }
+			</div>
+			if (item.Desc != "") {
+				<div class="attr desc">
+					{ item.Desc }
+				</div>
+			}
+			<div class="attr price">
+				{ strconv.FormatUint(uint64(item.Price), 10) } USD
+			</div>
+		</div>
+	}
+}

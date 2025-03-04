@@ -1,11 +1,9 @@
 package inventory
 
-import (
-	"fmt"
-	"strconv"
-)
+import "strconv"
+import "fmt"
 
-templ (it *InventoryTemplater) Paginator(current, last int) {
+templ Paginator(current, last int) {
 	<div id="paginator">
 		if last <= 7 {
 			for i:= 1; i<=last; i++ {

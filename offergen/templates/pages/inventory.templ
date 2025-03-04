@@ -1,9 +1,0 @@
-package pages
-
-import "offergen/templates/components"
-
-templ (pr *PageTemplater) Inventory(userID string) {
-	<link rel="stylesheet" href={ "styles/inventory.css?cache-id=" + pr.cacheID }/>
-	@components.Sidebar(true)
-	@pr.inventoryTemplater.ItemsPage(userID)
-}

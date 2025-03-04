@@ -1,0 +1,16 @@
+package inventory
+
+import "offergen/templates/layouts"
+
+templ InventoryMain(userID string) {
+	@layouts.Card("no-background", "inventory-title") {
+		<h2 style="color: white">Inventory items</h2>
+	}
+	<div id="inventoryItemsContainer">
+		@tabs()
+		<div id="itemsContainer" hx-get="/inventory/items?from0&amount=10" hx-swap="outerHTML" hx-trigger="load"></div>
+		<div id="paginator-container">
+			<div id="paginator" hx-get="/inventory/item-pages?current=1" hx-trigger="load" hx-swap="outerHTML"></div>
+		</div>
+	</div>
+}

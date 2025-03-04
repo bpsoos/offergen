@@ -66,7 +66,7 @@ func (decoder FormDecoder) Decode(v interface{}, values url.Values) error {
 func (decoder FormDecoder) MustParseDecodeErrors(err error) []common_deps.FieldError {
 	if err == nil {
 		logger.Error("err was nil")
-		panic(err)
+		panic("err was nil")
 	}
 	if err, ok := err.(*form.InvalidDecoderError); ok {
 		logger.Error("Invalid decode error", "errMsg", err.Error())

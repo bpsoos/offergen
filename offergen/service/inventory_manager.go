@@ -21,11 +21,14 @@ type (
 		Create(inventory *models.Inventory) (*models.Inventory, error)
 		Get(ownerID string) (*models.Inventory, error)
 		Update(ownerId string, input *models.UpdateInventoryInput) (*models.Inventory, error)
+		CreateCategory(ownerID string, category string) error
+		BatchGetCategory(ownerID string) ([]string, error)
+		BatchGetCountedCategory(ownerID string) ([]models.CountedCategory, error)
 	}
 
 	ItemPersister interface {
 		Create(item *models.Item, ownerID string) error
-		BatchGet(from, amount uint, ownerID string) ([]models.Item, error)
+		BatchGet(ownerID string, input *models.GetItemsInput) ([]models.Item, error)
 		Delete(itemID, ownerID string) error
 		ItemCount(ownerID string) (int, error)
 	}
@@ -43,6 +46,7 @@ func (im *InventoryManager) CreateItem(input *models.AddItemInput, ownerID strin
 		ID:    uuid.New(),
 		Price: input.Price,
 		Name:  input.Name,
+		Desc:  input.Desc,
 	}
 
 	if err := im.itemPersister.Create(
@@ -55,8 +59,8 @@ func (im *InventoryManager) CreateItem(input *models.AddItemInput, ownerID strin
 	return item, nil
 }
 
-func (im *InventoryManager) BatchGetItem(from, amount uint, ownerID string) ([]models.Item, error) {
-	return im.itemPersister.BatchGet(from, amount, ownerID)
+func (im *InventoryManager) BatchGetItem(ownerID string, input *models.GetItemsInput) ([]models.Item, error) {
+	return im.itemPersister.BatchGet(ownerID, input)
 }
 
 func (im *InventoryManager) DeleteItem(itemID, ownerID string) error {
@@ -77,4 +81,16 @@ func (im *InventoryManager) GetInventory(ownerID string) (*models.Inventory, err
 
 func (im *InventoryManager) UpdateInventory(ownerID string, input *models.UpdateInventoryInput) (*models.Inventory, error) {
 	return im.inventoryPersister.Update(ownerID, input)
+}
+
+func (im *InventoryManager) CreateCategory(ownerID string, category string) error {
+	return im.inventoryPersister.CreateCategory(ownerID, category)
+}
+
+func (im *InventoryManager) BatchGetCategory(ownerID string) ([]string, error) {
+	return im.inventoryPersister.BatchGetCategory(ownerID)
+}
+
+func (im *InventoryManager) BatchGetCountedCategory(ownerID string) ([]models.CountedCategory, error) {
+	return im.inventoryPersister.BatchGetCountedCategory(ownerID)
 }

@@ -1,6 +1,7 @@
 package inventory
 
 import (
+	"offergen/endpoint/handlermachinery"
 	"offergen/endpoint/models"
 
 	"github.com/gofiber/fiber/v2"
@@ -30,5 +31,10 @@ func (h *Handler) ItemPages(ctx *fiber.Ctx) error {
 		lastPage = (count-1)/10 + 1
 	}
 	logger.Info("last page", "lastPage", lastPage, "count", count)
-	return h.renderer.Render(ctx, h.inventoryTemplater.Paginator(int(input.Current), lastPage))
+
+	c, w := handlermachinery.ToTemplaterContext(ctx)
+	return h.inventoryTemplater.Paginator(c, w,
+		int(input.Current),
+		lastPage,
+	)
 }

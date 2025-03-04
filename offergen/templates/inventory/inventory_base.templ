@@ -1,0 +1,11 @@
+package inventory
+
+import "offergen/templates/components"
+
+templ InventoryBase(userID string, contents templ.Component) {
+	<link rel="stylesheet" href="/styles/inventory.css"/>
+	@components.Sidebar(true)
+	<div id="inventoryPageContainer">
+		@contents
+	</div>
+}

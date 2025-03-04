@@ -5,15 +5,20 @@ import (
 	"offergen/templates/layouts"
 )
 
-templ (it *InventoryTemplater) Items(items []models.Item) {
+templ ItemsTable(items []models.Item) {
 	<div id="itemsContainer">
 		if len(items) == 0 {
 			@layouts.Card("add-item-note") {
 				<div>Add your first item by clicking "Create new"!</div>
 			}
 		}
+		@layouts.Card("no-background", "items-table-header") {
+			<a id="createNew" hx-get="/inventory/create-page" hx-push-url="true" hx-target="body">
+				+
+			</a>
+		}
 		for _, item := range items {
-			@it.Item(item)
+			@ItemRow(item)
 		}
 	</div>
 }

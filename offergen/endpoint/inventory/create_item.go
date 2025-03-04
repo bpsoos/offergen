@@ -3,19 +3,19 @@ package inventory
 import (
 	"encoding/json"
 	"offergen/endpoint"
+	"offergen/endpoint/handlermachinery"
 	"offergen/endpoint/models"
-	"regexp"
 
 	"github.com/gofiber/fiber/v2"
 )
 
-func (h *Handler) Create(ctx *fiber.Ctx) error {
-	input, err := h.parseItems(ctx)
+func (h *Handler) CreateItem(ctx *fiber.Ctx) error {
+	createItemInput, err := h.parseItem(ctx)
 	if err != nil {
 		return err
 	}
 
-	err = h.structValidator.Validate(input)
+	err = h.structValidator.Validate(createItemInput)
 	if err != nil {
 		validationErrors := h.structValidator.MustParseValidationErrors(err)
 		logger.Info("valdation error", "errMsg", validationErrors[0].Error())
@@ -23,28 +23,16 @@ func (h *Handler) Create(ctx *fiber.Ctx) error {
 		return h.renderItemCreateError(ctx, validationErrors[0].Field()+": validation error")
 	}
 
-	pattern, err := regexp.Compile(models.AllowedNamePattern)
-	if err != nil {
-		logger.Error(
-			"allowed name pattern is an invalid regex",
-			"allowedNamePattern", models.AllowedNamePattern,
-		)
-		return ctx.SendStatus(fiber.StatusInternalServerError)
-	}
-
-	if !pattern.MatchString(input.Name) {
-		logger.Info("allow pattern validation error", "inputName", input.Name)
-		return h.renderItemCreateError(ctx, "Name: validation error")
-	}
-
 	logger.Info(
 		"parsed and validated item",
-		"itemName", input.Name,
-		"itemPrice", input.Price,
+		"itemName", createItemInput.Name,
+		"itemPrice", createItemInput.Price,
+		"desc", createItemInput.Desc,
 	)
-	item, err := h.inventoryManager.CreateItem(input, h.tokenVerifier.GetUserID(ctx))
+
+	item, err := h.inventoryManager.CreateItem(createItemInput, h.tokenVerifier.GetUserID(ctx))
 	if err != nil {
-		logger.Info("could not create item", "inputName", input.Name)
+		logger.Info("could not create item", "inputName", createItemInput.Name)
 		return h.renderItemCreateError(ctx, "something went wrong")
 	}
 
@@ -52,9 +40,10 @@ func (h *Handler) Create(ctx *fiber.Ctx) error {
 		return ctx.JSON(&item)
 	}
 
-	return h.renderer.Render(
-		ctx,
-		h.pageTemplater.Inventory(h.tokenVerifier.GetUserID(ctx)),
+	return h.inventoryTemplater.Inventory(
+		ctx.Context(),
+		ctx.Response().BodyWriter(),
+		h.tokenVerifier.GetUserID(ctx),
 	)
 }
 
@@ -67,10 +56,12 @@ func isJSONContentType(ctx *fiber.Ctx) bool {
 }
 
 func (h *Handler) CreatePage(ctx *fiber.Ctx) error {
-	return h.renderer.Render(ctx, h.inventoryTemplater.ItemCreator())
+	userID := h.tokenVerifier.GetUserID(ctx)
+	c, w := handlermachinery.ToTemplaterContext(ctx)
+	return h.inventoryTemplater.ItemCreator(c, w, userID)
 }
 
-func (h *Handler) parseItems(ctx *fiber.Ctx) (*models.AddItemInput, error) {
+func (h *Handler) parseItem(ctx *fiber.Ctx) (*models.AddItemInput, error) {
 	input := new(models.AddItemInput)
 	if isJSONContentType(ctx) {
 		body := ctx.Body()

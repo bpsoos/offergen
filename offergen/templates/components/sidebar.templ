@@ -4,6 +4,7 @@ templ Sidebar(isLoggedIn bool) {
 	<div class="sidebar">
 		<a
 			hx-get="/"
+			hx-push-url="true"
 			hx-target="body"
 			id="home"
 			style="grid-column-start: 1"
@@ -22,6 +23,7 @@ templ Sidebar(isLoggedIn bool) {
 		} else {
 			<a
 				hx-get="/inventory"
+				hx-push-url="true"
 				hx-target="body"
 				id="inventory"
 				style="grid-column-start: 2;"

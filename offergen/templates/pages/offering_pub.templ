@@ -1,0 +1,53 @@
+package pages
+
+import (
+	"offergen/endpoint/models"
+	"offergen/templates/layouts"
+	"strconv"
+)
+
+templ Offering(items []models.Item) {
+	<!DOCTYPE html>
+	<html>
+		<head>
+			<title>Offergen: inventory manager and offering generator</title>
+			<script src="https://unpkg.com/htmx.org@2.0.4" integrity="sha384-HGfztofotfshcF7+8n44JQL2oJmowVChPTg48S+jvZoztPfvwD79OC/LTtG6dMp+" crossorigin="anonymous"></script>
+			<link rel="stylesheet" href="/styles/index.css"/>
+		</head>
+		<body>
+			@layouts.Card() {
+				<div class="menu">
+					<h2 class="title">Offer</h2>
+					<div class="tabs">
+						<button class="tab">All</button>
+						<button class="tab">Foods</button>
+						<button class="tab">Drinks</button>
+					</div>
+					<div class="menuBody">
+						for _, item := range items {
+							@menuItemRow(item)
+						}
+					</div>
+				</div>
+			}
+		</body>
+	</html>
+}
+
+templ menuItemRow(item models.Item) {
+	@layouts.Card() {
+		<div class="item">
+			<div class="attr name">
+				{ item.Name }
+			</div>
+			if (item.Desc != "") {
+				<div class="attr desc">
+					{ item.Desc }
+				</div>
+			}
+			<div class="attr price">
+				{ strconv.FormatUint(uint64(item.Price), 10) } USD
+			</div>
+		</div>
+	}
+}

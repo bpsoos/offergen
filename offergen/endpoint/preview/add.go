@@ -5,7 +5,6 @@ import (
 	"offergen/endpoint/models"
 	"offergen/templates"
 	itemTemplates "offergen/templates/components/items"
-	"regexp"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"
@@ -28,25 +27,11 @@ func (i *Handler) Add(ctx *fiber.Ctx) error {
 	}
 
 	err = i.structValidator.Validate(input)
-	if err != nil {
+	if err == nil {
 		validationErrors := i.structValidator.MustParseValidationErrors(err)
 		logger.Info("valdation error", "errMsg", validationErrors[0].Error())
 
 		return renderItemAddError(ctx, validationErrors[0].Field()+": validation error")
-	}
-
-	pattern, err := regexp.Compile(models.AllowedNamePattern)
-	if err != nil {
-		logger.Error(
-			"allowed name pattern is an invalid regex",
-			"allowedNamePattern", models.AllowedNamePattern,
-		)
-		panic(err)
-	}
-
-	if !pattern.MatchString(input.Name) {
-		logger.Info("allow pattern validation error", "inputName", input.Name)
-		return renderItemAddError(ctx, "Name: validation error")
 	}
 
 	return renderItemRowResponse(ctx, input)
